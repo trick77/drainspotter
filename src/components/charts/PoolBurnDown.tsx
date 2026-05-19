@@ -12,31 +12,21 @@ import {
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
 import { formatUsd, formatUsdCompact, formatDate } from "@/lib/format";
-import type { Aggregations, PoolState, Forecast, DateRange } from "@/lib/types";
+import type { Aggregations, PoolState, Forecast } from "@/lib/types";
 
 type Props = {
   aggregations: Aggregations;
   pool: PoolState;
   forecast: Forecast;
-  dateRange: DateRange;
 };
 
-function filterByRange(data: { date: string }[], lastDay: string, range: DateRange) {
-  if (range === "all") return data;
-  const days = range === "7d" ? 7 : 14;
-  const [y, m, d] = lastDay.split("-").map(Number);
-  const cutoff = new Date(Date.UTC(y, m - 1, d - days + 1)).toISOString().slice(0, 10);
-  return data.filter((row) => row.date >= cutoff);
-}
-
-export function PoolBurnDown({ aggregations, pool, forecast, dateRange }: Props) {
-  const all = forecast.dailyProjection.map((d) => ({
+export function PoolBurnDown({ aggregations, pool, forecast }: Props) {
+  const data = forecast.dailyProjection.map((d) => ({
     date: d.date,
     actual: d.date <= aggregations.lastDayInData ? d.projected : null,
     projected: d.date > aggregations.lastDayInData ? d.projected : null,
     pool: pool.totalPool,
   }));
-  const data = filterByRange(all, aggregations.lastDayInData, dateRange);
   return (
     <ChartFrame
       title="Pool Burn-Down + Forecast"

@@ -13,33 +13,23 @@ import { ChartTooltip } from "@/components/ChartTooltip";
 import { ChartLegend } from "@/components/ChartLegend";
 import { modelColor } from "@/lib/model-colors";
 import { formatUsd, formatUsdCompact, formatDate } from "@/lib/format";
-import type { Aggregations, DateRange } from "@/lib/types";
+import type { Aggregations } from "@/lib/types";
 import { clsx } from "clsx";
 
 type Props = {
   aggregations: Aggregations;
   groupBy: "user" | "model";
   onGroupByChange: (g: "user" | "model") => void;
-  dateRange: DateRange;
   topN?: number;
 };
-
-function filterByRange(data: { date: string }[], lastDay: string, range: DateRange) {
-  if (range === "all") return data;
-  const days = range === "7d" ? 7 : 14;
-  const [y, m, d] = lastDay.split("-").map(Number);
-  const cutoff = new Date(Date.UTC(y, m - 1, d - days + 1)).toISOString().slice(0, 10);
-  return data.filter((row) => row.date >= cutoff);
-}
 
 export function DailyBurnRate({
   aggregations,
   groupBy,
   onGroupByChange,
-  dateRange,
   topN = 6,
 }: Props) {
-  const filtered = filterByRange(aggregations.perDay, aggregations.lastDayInData, dateRange);
+  const filtered = aggregations.perDay;
   const topKeys =
     groupBy === "user"
       ? aggregations.perUser.slice(0, topN).map((u) => u.username)

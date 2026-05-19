@@ -9,7 +9,6 @@ import { DropZone } from "@/components/DropZone";
 import { DemoDataButton } from "@/components/DemoDataButton";
 import { PoolControls } from "@/components/PoolControls";
 import { ForecastToggle } from "@/components/ForecastToggle";
-import { DateRangeToggle } from "@/components/DateRangeToggle";
 import { ExportPdfButton } from "@/components/ExportPdfButton";
 import { WarningBanner } from "@/components/WarningBanner";
 import { ChartDefs } from "@/components/ChartDefs";
@@ -133,13 +132,6 @@ export default function App() {
               value={settings.forecastMode}
               onChange={(v) => setSettings({ ...settings, forecastMode: v })}
             />
-            <span className="text-xs text-white/50 uppercase tracking-wider ml-4">
-              Range
-            </span>
-            <DateRangeToggle
-              value={settings.dateRange}
-              onChange={(v) => setSettings({ ...settings, dateRange: v })}
-            />
             <div className="ml-auto">
               <DropZone onFile={handleFile} />
             </div>
@@ -154,14 +146,13 @@ export default function App() {
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
             <PoolGauge pool={pool} forecast={fc} />
-            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} dateRange={settings.dateRange} />
+            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
             <UserLeaderboard aggregations={aggregations} pool={pool} />
             <ParetoChart aggregations={aggregations} />
             <DailyBurnRate
               aggregations={aggregations}
               groupBy={settings.burnRateGroupBy}
               onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
-              dateRange={settings.dateRange}
             />
             <UserModelHeatmap aggregations={aggregations} />
             <ModelMixTreemap aggregations={aggregations} />

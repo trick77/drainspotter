@@ -20,14 +20,11 @@ export type UsageRow = {
 
 export type ForecastMode = "linear" | "rolling7";
 
-export type DateRange = "7d" | "14d" | "all";
-
 export type Settings = {
   purchasedSlots: number;
   costPerSeat: number;
   forecastMode: ForecastMode;
   burnRateGroupBy: "user" | "model";
-  dateRange: DateRange;
   tableSort: { column: string; direction: "asc" | "desc" };
 };
 

@@ -7,7 +7,6 @@ export const DEFAULT_SETTINGS: Settings = {
   costPerSeat: 19,
   forecastMode: "linear",
   burnRateGroupBy: "user",
-  dateRange: "all",
   tableSort: { column: "totalAic", direction: "desc" },
 };
 
