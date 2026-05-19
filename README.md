@@ -1,4 +1,4 @@
-<p align="center">
+<p align="left">
   <img src="public/drainspotter.png" alt="drainspotter" width="320">
 </p>
 
@@ -16,6 +16,10 @@ actually buy", and answers the questions you actually have:
 - Who are the top drainers? Who's over their fair share of $19/seat?
 - Which models eat the budget — and which are expensive per request?
 - Which user is solo-driving up a specific model's cost?
+
+<p align="center">
+  <img src="docs/assets/screenshot.png" alt="drainspotter dashboard screenshot" width="860">
+</p>
 
 Everything runs client-side. The CSV never leaves the browser.
 
