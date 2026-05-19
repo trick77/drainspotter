@@ -5,70 +5,70 @@
 
 ## Context
 
-Ab 1.6.2026 stellt GitHub Copilot auf usage-based Billing um. Jeder Business-Seat ($19/Monat) bringt $19 AI Credits mit; in den Promo-Monaten Juni–August 2026 zusätzlich $30. Die Credits sind nicht pro Seat reserviert, sondern fliessen in einen gemeinsamen Org-Pool: alle aktiven User können daraus zehren.
+As of June 1, 2026, GitHub Copilot switches to usage-based billing. Each Business seat ($19/month) comes with $19 in AI Credits; during the promotional months June–August 2026 an additional $30 is included. Credits are not reserved per seat — they flow into a shared org pool that all active users draw from.
 
-GitHub liefert einen CSV-Report (`premiumRequestUsageReport_*.csv`) mit pro-User, pro-Modell, pro-Tag Verbrauch — sowohl in der alten PRU-Welt (`gross_amount`) als auch in der neuen AI-Credit-Welt (`aic_gross_amount`, USD).
+GitHub provides a CSV report (`premiumRequestUsageReport_*.csv`) with per-user, per-model, per-day consumption — both in the legacy PRU world (`gross_amount`) and in the new AI-Credit world (`aic_gross_amount`, USD).
 
-drainspotter ist ein lokales Browser-Cockpit, in das man die CSV drag-and-droppt. Daraus beantwortet das Tool eine Reihe zusammenhängender Fragen rund um AI-Credit-Konsum und Pool-Auslastung:
+drainspotter is a local browser cockpit you drag and drop the CSV into. From that data the tool answers a set of related questions about AI-credit consumption and pool utilization:
 
-- **Pool-Status:** Wie viel des gemeinsamen Budgets ist bereits aufgebraucht? Wie viel bleibt?
-- **Forecast:** Reicht das Budget bei aktuellem Burn bis Monatsende — oder läuft der Pool leer?
-- **Top-Drainer:** Welche User verbrauchen am meisten? Wer liegt über/unter Fair-Share je Seat?
-- **Konzentration:** Wie ist der Verbrauch verteilt — Pareto-typisch (wenige treiben den Grossteil) oder breit gestreut?
-- **Modell-Mix:** Welche Modelle fressen den Pool? Wo geht das Geld hin — in teure Codex-Max-Calls oder breit gestreut?
-- **Modell-Effizienz:** Welches Modell kostet wie viel pro Request? Wo ist der Hebel für günstigere Defaults?
-- **User × Modell:** Welche User setzen schwergewichtig auf welche Modelle (z.B. Single-User dominiert ein teures Modell)?
-- **Zeitverlauf:** Wann brennt der Pool — gleichmässig, oder Burst-Peaks an einzelnen Tagen?
-- **Seat-Auslastung:** Wie viele gekaufte Slots sind aktiv? Wie viele Slots zahlen wir leer mit?
-- **Quota-Risiko:** Wer hat sein Monats-Limit gerissen (`exceeds_quota`) oder steht kurz davor?
+- **Pool status:** How much of the shared budget has already been spent? How much remains?
+- **Forecast:** Does the budget last until end of month at the current burn rate — or does the pool run dry?
+- **Top drainers:** Which users spend the most? Who is above or below their fair share per seat?
+- **Concentration:** How is consumption distributed — Pareto-style (a few users drive the majority) or spread broadly?
+- **Model mix:** Which models are eating the pool? Where is the money going — into expensive Codex Max calls or spread across many models?
+- **Model efficiency:** What does each model cost per request? Where is the lever for cheaper defaults?
+- **User × model:** Which users rely heavily on which models (e.g., a single user dominating an expensive model)?
+- **Burn over time:** When does the pool burn — steadily, or in burst peaks on individual days?
+- **Seat utilization:** How many purchased slots are active? How many are we paying for but sitting idle?
+- **Quota risk:** Who has exceeded their monthly limit (`exceeds_quota`) or is close to doing so?
 
-Keine Daten verlassen den Browser.
+No data leaves the browser.
 
 ## Scope
 
 **In-Scope (MVP):**
-- Drag/Drop CSV-Upload
-- 10 Charts (siehe Components)
-- Slider: gekaufte Slots (Stückzahl) + Cost-per-Seat in USD (default $19, in Promo-Monaten manuell auf $49)
-- Forecast bis Monatsende (linear + 7-Tage-Avg, mit Toggle)
-- Datum-Range-Toggle (`7d / 14d / all`) — filtert nur die Zeitverlauf-Charts (DailyBurnRate, PoolBurnDown). Pool-Berechnung und Forecast bleiben monatlich
-- **Persistente Einstellungen via LocalStorage:** Slots-Anzahl, Cost-per-Seat, Forecast-Modus, DailyBurnRate-Gruppierung (User/Modell), Range-Toggle, Sortierreihenfolge UserDetailTable. Key: `drainspotter:settings:v1`. CSV-Daten selbst werden **nicht** persistiert (Privacy + Volumen).
-- **Demo-CSV bundled:** Button „Beispieldaten laden" im Empty-State lädt eine vorbereitete CSV unter `/public/demo.csv`. Inhalt: User-bereitgestelltes Real-Sample (15 Tage, 1.–15.04.2026, alle Modelle, ~120 User), Usernames anonymisiert nach folgendem Schema:
-    - **Top-Drainer** (höchster Summen-`aic_gross_amount`): bekommen aristokratisch-villainöse Vielfrass-Namen. **`joe-gastown` ist explizit der Top-1-Drainer** (wird auf den Real-User mit dem höchsten Summen-Spend gemappt). Plätze 2–10 in absteigender Spend-Reihenfolge: `chief-token-officer`, `lord-of-the-pool`, `count-contextula`, `sir-burns-a-lot`, `duke-of-drain`, `promptzilla`, `token-schredder`, `quota-muncher`, `voldetoken`
-    - **Bottom-10-Non-Drainer** (niedrigster Summen-`aic_gross_amount` > 0): bekommen Lurker-/Lizenz-Leichen-Namen, in aufsteigender Spend-Reihenfolge (also: `copilot-bünzli` = absoluter Tiefststand): `copilot-bünzli`, `lizenz-leiche`, `enablement-target`, `quota-coward`, `token-tumbleweed`, `untapped-potential`, `ghost-coder`, `inference-abstainer`, `auto-complete-amish`, `still-on-stackoverflow`
-    - **Middle-Band-User** (alle dazwischen, ~100 im Demo-Sample): zuerst deterministisch aus einem **Pool von ~50 neutralen Dev-Funny-Names** verteilt (mild humorvoll, Dev-Kultur, weniger extrem als Top/Bottom). Beispiele: `coffee-driven-dev`, `regex-rita`, `merge-conflict-mary`, `bug-magnet`, `rubber-ducker`, `semicolon-skipper`, `cache-miss-carl`, `null-pointer-nina`, `stale-branch-bob`, `force-push-fred` u.ä. Wenn Pool erschöpft, werden weitere User auf `dev-NN` (zweistellig, nullgepaddet) gemappt.
-    - Jeder Original-Username bekommt **genau einen** Alias konsistent über alle Rows hinweg (gleiche Person ergibt gleichen Alias → korrekte Heatmap/Leaderboard-Daten)
-    - Alle Zahlen-Spalten (`quantity`, `aic_quantity`, `aic_gross_amount`, etc.) bleiben **1:1 unverändert**
-    - Organization-Spalte wird auf `DemoOrg` gesetzt
-- **PDF-Export via `window.print()` + Print-Stylesheet:** Button „Export PDF" triggert nativen Print-Dialog. Print-CSS schaltet auf A4-Layout, white-on-paper-Theme (kein Glass/Blur), explizite Page-Breaks zwischen den Sektionen. SVG-Charts bleiben vektoriell.
-- Locale: Schweizer Format (`$1'234.56`, Datum `DD.MM.YYYY`, `de-CH` via `Intl.NumberFormat`/`DateTimeFormat`)
-- Container-Deployment via `compose.yaml` + `Containerfile`, hinter Traefik
+- Drag/drop CSV upload
+- 10 charts (see Components)
+- Sliders: number of purchased slots + cost per seat in USD (default $19, manually set to $49 during promo months)
+- End-of-month forecast (linear + 7-day average, with toggle)
+- Date range toggle (`7d / 14d / all`) — filters only the time-series charts (DailyBurnRate, PoolBurnDown). Pool calculation and forecast remain monthly
+- **Persistent settings via LocalStorage:** slot count, cost per seat, forecast mode, DailyBurnRate grouping (user/model), range toggle, sort order of UserDetailTable. Key: `drainspotter:settings:v1`. The CSV data itself is **not** persisted (privacy + size).
+- **Bundled demo CSV:** A "Load sample data" button in the empty state loads a prepared CSV from `/public/demo.csv`. Content: a real sample provided by the user (15 days, April 1–15 2026, all models, ~120 users), with usernames anonymized as follows:
+    - **Top drainers** (highest total `aic_gross_amount`): receive aristocratic-villain glutton names. **`steve-gastown` is explicitly the #1 top drainer** (mapped to the real user with the highest total spend). Ranks 2–10 in descending spend order: `chief-token-officer`, `lord-of-the-pool`, `count-contextula`, `sir-burns-a-lot`, `duke-of-drain`, `promptzilla`, `token-shredder`, `quota-muncher`, `voldetoken`
+    - **Bottom-10 non-drainers** (lowest total `aic_gross_amount` > 0): receive lurker/license-zombie names, in ascending spend order (i.e., `copilot-bünzli` = absolute lowest): `copilot-bünzli`, `lizenz-leiche`, `enablement-target`, `quota-coward`, `token-tumbleweed`, `untapped-potential`, `ghost-coder`, `inference-abstainer`, `auto-complete-amish`, `still-on-stackoverflow`
+    - **Middle-band users** (everyone in between, ~100 in the demo sample): assigned deterministically from a **pool of ~50 neutral dev-funny names** (mildly humorous, dev-culture themed, less extreme than top/bottom). Examples: `coffee-driven-dev`, `regex-rita`, `merge-conflict-mary`, `bug-magnet`, `rubber-ducker`, `semicolon-skipper`, `cache-miss-carl`, `null-pointer-nina`, `stale-branch-bob`, `force-push-fred`, and similar. When the pool is exhausted, additional users are mapped to `dev-NN` (two digits, zero-padded).
+    - Each original username gets **exactly one** alias consistently across all rows (same person → same alias → correct heatmap/leaderboard data)
+    - All numeric columns (`quantity`, `aic_quantity`, `aic_gross_amount`, etc.) remain **unchanged 1:1**
+    - The organization column is set to `DemoOrg`
+- **PDF export via `window.print()` + print stylesheet:** An "Export PDF" button triggers the native print dialog. Print CSS switches to A4 layout, white-on-paper theme (no glass/blur), explicit page breaks between sections. SVG charts remain vector.
+- Locale: Swiss locale (`$1'234.56`, date `DD.MM.YYYY`, `de-CH` via `Intl.NumberFormat`/`DateTimeFormat`)
+- Container deployment via `compose.yaml` + `Containerfile`, behind Traefik
 
-**Re-Upload-UX:** Drop einer zweiten CSV ersetzt die bestehende sofort (kein Confirm-Dialog), Settings (LocalStorage) bleiben erhalten.
+**Re-upload UX:** Dropping a second CSV immediately replaces the existing data (no confirmation dialog); settings (LocalStorage) are preserved.
 
-**Multi-Month-Daten in einer CSV:** Warn-Banner + automatisches Filtern auf neuesten Monat im Datensatz.
+**Multi-month data in one CSV:** Warning banner + automatic filtering to the most recent month in the dataset.
 
 **Out-of-Scope (YAGNI):**
-- Multi-Month-Historie / mehrere CSVs mergen
-- Auth, Persistenz, Backend
-- Anonymisierung der User-CSV (Klarnamen reichen, Daten bleiben lokal)
-- Light-Mode-Toggle — nur Premium-Glass-Dark
-- USD/Credits-Toggle — immer USD via `aic_gross_amount`
-- i18n der UI-Strings — UI ist Deutsch/Englisch gemischt-pragmatisch (nur Zahlen/Daten locale-formatiert)
+- Multi-month history / merging multiple CSVs
+- Auth, persistence, backend
+- Anonymizing user CSVs (real names are fine, data stays local)
+- Light-mode toggle — premium glass dark only
+- USD/Credits toggle — always USD via `aic_gross_amount`
+- i18n of UI strings — UI is pragmatically English (only numbers/dates are locale-formatted)
 
 ## Stack
 
 - **Build:** Vite + React 18 + TypeScript
-- **Styling:** Tailwind CSS + shadcn/ui Primitive (Button, Card, Slider, Toggle, Table, Tooltip)
-- **Look & Feel:** „Premium glass" — dunkler Indigo→Slate-Gradient-Background, halbtransparente Karten mit `backdrop-blur`, Orange→Rose-Akzent-Gradients für Drainer-Visualisierung. Font: Inter
-- **Charts:** Recharts (deckt Bar, Area, Line, Pie/Donut, Heatmap-via-custom, Scatter ab)
-- **CSV:** PapaParse (streaming, robust gegen Number-Parsing-Quirks der Copilot-CSV)
-- **Tests:** Vitest für CSV-Parser, Aggregator, Forecaster, Pool-Math
-- **Container:** Multi-stage Containerfile (`node:20-alpine` Build → `nginx:alpine` Serve), `compose.yaml` mit Traefik-Labels für externes Routing
+- **Styling:** Tailwind CSS + shadcn/ui primitives (Button, Card, Slider, Toggle, Table, Tooltip)
+- **Look & Feel:** "Premium glass" — dark indigo→slate gradient background, semi-transparent cards with `backdrop-blur`, orange→rose accent gradients for drainer visualization. Font: Inter
+- **Charts:** Recharts (covers Bar, Area, Line, Pie/Donut, custom Heatmap, Scatter)
+- **CSV:** PapaParse (streaming, robust against number-parsing quirks in the Copilot CSV)
+- **Tests:** Vitest for CSV parser, aggregator, forecaster, pool math
+- **Container:** Multi-stage Containerfile (`node:20-alpine` build → `nginx:alpine` serve), `compose.yaml` with Traefik labels for external routing
 
 ## Architecture / Units
 
-Klare Trennung in reine Berechnungs-Module (testbar ohne DOM) und UI-Komponenten:
+Clean separation between pure calculation modules (testable without DOM) and UI components:
 
 ```
 src/
@@ -103,9 +103,9 @@ src/
 ```
 
 **Boundaries:**
-- `lib/*` kennt kein React, keinen DOM — nur Datentypen rein, Datentypen raus
-- Charts erhalten fertige Aggregationen als Props, machen keine eigenen Berechnungen
-- `App.tsx` orchestriert: hält State (CSV-Daten, Pool-Config, Forecast-Modus), wendet `aggregator` und `forecaster` per `useMemo` an, gibt Resultate an Charts
+- `lib/*` has no knowledge of React or the DOM — pure data in, pure data out
+- Charts receive pre-computed aggregations as props and perform no calculations themselves
+- `App.tsx` orchestrates: holds state (CSV data, pool config, forecast mode), applies `aggregator` and `forecaster` via `useMemo`, and passes results down to charts
 
 ## Data Flow
 
@@ -126,23 +126,23 @@ File-Drop
   │   (eomSpend$, dailyProjection)              │
   └─────────────────────────────────────────────┘
   
-  → alles als Props in Charts-Komponenten
+  → all results passed as props to chart components
 ```
 
 ## Components (10 Charts)
 
-| # | Chart | Datenquelle | Zweck |
+| # | Chart | Data source | Purpose |
 |---|---|---|---|
-| 1 | **PoolGauge** | `pool-math` + `forecaster` | Hero-Visual: spent vs. Pool-Budget (Gauge-Skala = `Slots × CostPerSeat`), Forecast-EoM als zusätzliche Markierung. Wenn Forecast > Pool: roter Overshoot-Bereich |
+| 1 | **PoolGauge** | `pool-math` + `forecaster` | Hero visual: spent vs. pool budget (gauge scale = `Slots × CostPerSeat`), forecast EoM as an additional marker. If forecast > pool: red overshoot zone |
 | 2 | **KpiTiles** | Aggregations, Pool | Total spent · Active seats · Idle seats · Forecast EoM · Δ vs. Pool |
-| 3 | **UserLeaderboard** | `aggregator.perUser` | Top-N User horizontal Bars, Anteil am Pool in %, Forecast-Wert |
-| 4 | **ParetoChart** | `aggregator.perUser` | Kumulierte Bar+Line: 80/20-Konzentration |
-| 5 | **UserModelHeatmap** | `aggregator.userModel` | Welcher User intensiv welches Modell |
-| 6 | **ModelMixTreemap** | `aggregator.perModel` | $-Anteil pro Modell |
-| 7 | **CostPerRequest** | `aggregator.perModel` | Effizienz: `aic_gross_amount / quantity` je Modell |
-| 8 | **DailyBurnRate** | `aggregator.perDay` (+ optional gestapelt) | Stacked Area, Toggle „nach User" / „nach Modell" |
-| 9 | **PoolBurnDown** | `aggregator.perDay` + `pool-math` + `forecaster` | Kumulierter Spend pro Tag, Forecast-Linie bis Monatsende, **horizontale Pool-Budget-Linie** (`Slots × CostPerSeat`, z.B. 100 × $19 = $1900). Schnittpunkt Forecast × Budget-Linie zeigt, ob/wann der Pool reisst |
-| 10 | **UserDetailTable** | `aggregator.perUser` | Sortierbar, mit Sparkline, exceeds_quota-Badge |
+| 3 | **UserLeaderboard** | `aggregator.perUser` | Top-N users as horizontal bars, share of pool in %, forecast value |
+| 4 | **ParetoChart** | `aggregator.perUser` | Cumulative bar + line: 80/20 concentration |
+| 5 | **UserModelHeatmap** | `aggregator.userModel` | Which user uses which model heavily |
+| 6 | **ModelMixTreemap** | `aggregator.perModel` | Dollar share per model |
+| 7 | **CostPerRequest** | `aggregator.perModel` | Efficiency: `aic_gross_amount / quantity` per model |
+| 8 | **DailyBurnRate** | `aggregator.perDay` (+ optional stacked) | Stacked area, toggle "by user" / "by model" |
+| 9 | **PoolBurnDown** | `aggregator.perDay` + `pool-math` + `forecaster` | Cumulative spend per day, forecast line to end of month, **horizontal pool budget line** (`Slots × CostPerSeat`, e.g. 100 × $19 = $1900). Intersection of forecast line and budget line shows whether/when the pool runs out |
+| 10 | **UserDetailTable** | `aggregator.perUser` | Sortable, with sparkline, `exceeds_quota` badge |
 
 ## Pool & Forecast Math
 
@@ -155,7 +155,7 @@ remaining$ = totalPool$ - spent$
 percentUsed = spent$ / totalPool$
 ```
 
-User stellt in Promo-Monaten `costPerSeat` manuell auf $49.
+During promo months the user sets `costPerSeat` manually to $49.
 
 **Forecast (linear):**
 ```
@@ -165,7 +165,7 @@ dailyAvg = spent$ / daysElapsed
 forecastEoM$ = dailyAvg × daysInMonth
 ```
 
-**Forecast (7-Tage-Avg):**
+**Forecast (7-day average):**
 ```
 last7Days = letzte 7 Tage im Datensatz (oder weniger, falls < 7 Tage Daten)
 recentAvg = sum(last7Days.spent) / count(last7Days)
@@ -175,23 +175,23 @@ forecastEoM$ = spent$ + recentAvg × remainingDays
 
 ## Error Handling
 
-- **Falsches CSV-Format:** Validation gegen Required-Columns (`date, username, aic_gross_amount, model, quantity`). Bei Fehlern: Banner mit konkretem Hinweis welche Spalte fehlt.
-- **Leeres CSV / 0 Zeilen:** Empty-State mit Hinweis „Keine Daten erkannt".
-- **Mixed-Month Daten:** Wenn CSV mehrere Monate enthält, Banner mit Hinweis + Berechnung basiert auf neuestem Monat. (Edge-Case, normalerweise liefert GitHub einen Monat.)
-- **Slots < Active Seats:** Warnung „Du hast weniger Slots eingestellt als aktive User in CSV — Pool zu klein".
-- **Date-Parsing:** PapaParse mit explizitem `dynamicTyping: false`, dann manuelles `new Date(value)` mit Validierung.
-- **Floating-Point in CSV:** `aic_gross_amount` ist in der Original-CSV oft `1.0800000000000004` etc. — Aggregator nutzt `parseFloat` und rundet erst bei der Anzeige.
+- **Wrong CSV format:** Validation against required columns (`date, username, aic_gross_amount, model, quantity`). On failure: banner with a specific note identifying which column is missing.
+- **Empty CSV / 0 rows:** Empty state with the message "No data detected."
+- **Mixed-month data:** If the CSV contains multiple months, a banner is shown and calculations are based on the most recent month. (Edge case — GitHub normally exports one month at a time.)
+- **Slots < active seats:** Warning: "You have configured fewer slots than active users in the CSV — pool is too small."
+- **Date parsing:** PapaParse with explicit `dynamicTyping: false`, then manual `new Date(value)` with validation.
+- **Floating-point in CSV:** `aic_gross_amount` often appears as `1.0800000000000004` etc. in the original CSV — the aggregator uses `parseFloat` and rounds only at display time.
 
 ## Testing
 
-`vitest` mit dem Fokus auf Berechnungs-Logik:
+`vitest` focused on calculation logic:
 
-- `csv-parser.test.ts` — gültiges CSV, fehlende Spalten, leeres File, Floating-Point Robustheit, Sample-Fixture aus dem User-CSV
-- `aggregator.test.ts` — per-user/per-model/per-day Roll-Ups mit kleinem Fixture
-- `forecaster.test.ts` — linear vs. 7-Tage-Avg, Edge-Cases (1 Tag Daten, kompletter Monat)
-- `pool-math.test.ts` — Pool-Berechnung, Fair-Share, exceeds-flag
+- `csv-parser.test.ts` — valid CSV, missing columns, empty file, floating-point robustness, sample fixture from user CSV
+- `aggregator.test.ts` — per-user/per-model/per-day roll-ups with a small fixture
+- `forecaster.test.ts` — linear vs. 7-day average, edge cases (1 day of data, full month)
+- `pool-math.test.ts` — pool calculation, fair share, exceeds flag
 
-Kein Component-Testing im MVP — Charts werden visuell verifiziert.
+No component testing in MVP — charts are verified visually.
 
 ## Deployment
 
@@ -210,7 +210,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 ```
 
-**`compose.yaml`:** Service `drainspotter` mit `build: .`, ohne Port-Publish (Traefik routet intern), mit Labels:
+**`compose.yaml`:** Service `drainspotter` with `build: .`, no port publish (Traefik routes internally), with labels:
 ```yaml
 services:
   drainspotter:
@@ -229,80 +229,80 @@ networks:
     external: true
 ```
 
-Konkrete Domain/Resolver-Namen werden im Implement-Schritt mit dem User finalisiert.
+Specific domain and resolver names will be finalized with the user during the implementation step.
 
-**`nginx.conf`:** SPA-Fallback (`try_files $uri /index.html`), gzip on, cache headers für `/assets/*`.
+**`nginx.conf`:** SPA fallback (`try_files $uri /index.html`), gzip on, cache headers for `/assets/*`.
 
 ## Visual Design Notes
 
 ### Frame & Layout
-- Background: `linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)` + dezentes Noise-/Grain-Overlay (1% opacity) gegen Banding
-- Karten: `bg-white/4 backdrop-blur-md border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25)]`
-- Karten-Header: Label (uppercase, tracking-wider, text-xs, white/60) + Value (text-3xl, font-semibold, tabular-nums, Gradient-Text)
-- Font: Inter Variable (300–700), für Zahlen `font-variant-numeric: tabular-nums` (kein Springen)
-- Spacing: 12-Column Grid auf ≥xl, 6-Column md, 1-Column mobile. Charts mind. 320px Höhe, KPI-Tiles 140px
-- Empty-State (vor CSV-Upload): grosser DropZone-Hero (60vh), animierter Gradient-Glow am Drop-Target
+- Background: `linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)` + subtle noise/grain overlay (1% opacity) to prevent banding
+- Cards: `bg-white/4 backdrop-blur-md border border-white/8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25)]`
+- Card headers: label (uppercase, tracking-wider, text-xs, white/60) + value (text-3xl, font-semibold, tabular-nums, gradient text)
+- Font: Inter Variable (300–700), `font-variant-numeric: tabular-nums` for numbers (prevents layout shift)
+- Spacing: 12-column grid at ≥xl, 6-column at md, 1-column on mobile. Charts minimum 320px height, KPI tiles 140px
+- Empty state (before CSV upload): large DropZone hero (60vh), animated gradient glow on the drop target
 
-### Farb-Palette (verbindlich)
-- **Brand-Akzent (Drainer / Heatmap-Hot):** Gradient `#fb923c → #f43f5e` (Orange → Rose)
-- **Cool / Idle / Forecast:** `#818cf8 → #6366f1` (Indigo)
-- **Pool-Linie (Budget):** `#22d3ee` solid, 2px, dashed
-- **Overshoot-Zone:** `#ef4444` mit 20% opacity Fill
-- **Achsen/Grid:** `white/8` für Gridlines (dashed `4 4`), `white/40` für Achsen-Text
-- **Modell-Palette** (für Stack/Treemap/Heatmap): 8 abgestimmte Farben in HSL-Reihe `#6366f1, #8b5cf6, #d946ef, #ec4899, #fb7185, #fb923c, #facc15, #84cc16` — deterministisch nach Modell-Name gehasht, damit dasselbe Modell überall dieselbe Farbe hat
+### Color Palette (normative)
+- **Brand accent (drainer / heatmap hot):** gradient `#fb923c → #f43f5e` (orange → rose)
+- **Cool / idle / forecast:** `#818cf8 → #6366f1` (indigo)
+- **Pool line (budget):** `#22d3ee` solid, 2px, dashed
+- **Overshoot zone:** `#ef4444` with 20% opacity fill
+- **Axes/grid:** `white/8` for gridlines (dashed `4 4`), `white/40` for axis labels
+- **Model palette** (for stack/treemap/heatmap): 8 coordinated HSL colors `#6366f1, #8b5cf6, #d946ef, #ec4899, #fb7185, #fb923c, #facc15, #84cc16` — deterministically hashed by model name so the same model always gets the same color across all charts
 
-### Charts: Pflicht-Polish (Recharts-spezifisch)
-Recharts wird komplett gethemed — kein einziger Default bleibt sichtbar:
+### Charts: Required Polish (Recharts-specific)
+Recharts is fully themed — no default styling remains visible:
 
-- **Custom Tooltips** (eigene Komponente): glass-Card, abgerundet, mit Modell-Farb-Dot links, Wert rechts in tabular-nums, Delta-Pille farbcodiert. Niemals Recharts-Default-Tooltip.
-- **Custom Legends:** unten, mit Klick-Toggle (Serie aus-/einblenden), animiertes Highlight beim Hover
-- **Gradient-Fills (definiert als `<defs><linearGradient>`):** jede Area/Bar nutzt einen Gradient, keine Flat-Fills
-  - Bars: vertikal von vollem Akzent oben → 40% opacity unten + abgerundete `radius={[6,6,0,0]}`
-  - Areas: 80% → 0% opacity vertikal
-  - Lines: 2.5px stroke, `type="monotone"`, mit Gradient-Stroke per `stroke="url(#lineGrad)"`
-- **Axes:** `tickLine={false}`, `axisLine={false}`, Tick-Font `white/40 11px`, Y-Achsen-Labels mit `$` und K-Suffix (`$1.2k`)
-- **CartesianGrid:** nur horizontale Linien, dashed, `white/8`
-- **Animationen:** Mount-Animation 600ms ease-out, Hover-Transitions 150ms. Re-renders (Slider-Change) ohne Re-Mount, also smooth interpoliert.
-- **Hover-Crosshair:** vertical dashed line, gefolgt von glow-pulse am Datapoint
-- **Empty-State pro Chart:** dezenter Placeholder mit Icon + „Keine Daten" statt blank weiss
+- **Custom tooltips** (dedicated component): glass card, rounded, with a model color dot on the left and the value on the right in tabular-nums, delta pill color-coded. Never use the Recharts default tooltip.
+- **Custom legends:** positioned below, with click-to-toggle (show/hide series), animated highlight on hover
+- **Gradient fills (defined as `<defs><linearGradient>`):** every area and bar uses a gradient, no flat fills
+  - Bars: vertical from full accent at top → 40% opacity at bottom + rounded `radius={[6,6,0,0]}`
+  - Areas: 80% → 0% opacity vertically
+  - Lines: 2.5px stroke, `type="monotone"`, gradient stroke via `stroke="url(#lineGrad)"`
+- **Axes:** `tickLine={false}`, `axisLine={false}`, tick font `white/40 11px`, Y-axis labels with `$` and K-suffix (`$1.2k`)
+- **CartesianGrid:** horizontal lines only, dashed, `white/8`
+- **Animations:** mount animation 600ms ease-out, hover transitions 150ms. Re-renders (slider change) without re-mount — smooth interpolation.
+- **Hover crosshair:** vertical dashed line, followed by a glow-pulse on the data point
+- **Empty state per chart:** subtle placeholder with icon + "No data" instead of blank white
 
-### Chart-spezifische Polish-Anforderungen
+### Chart-specific Polish Requirements
 
 | Chart | Specifics |
 |---|---|
-| **PoolGauge** | Custom Half-Donut (kein Recharts-Default), Sweep-Animation beim Mount, Overshoot-Bereich rot mit Glow, zentral grosses `$`-Number mit Gradient-Text, darunter `% of pool` |
-| **KpiTiles** | Sparkline mini-area (7 Tage) im Hintergrund jeder Tile, Wert vorne, Delta-Pill rechts oben |
-| **UserLeaderboard** | Horizontale Bars mit Orange→Rose-Gradient, rechts der Wert in tabular-nums, links Avatar-Initialen-Bubble (gehashte Hintergrundfarbe), Fair-Share-Marker als vertikale dashed line bei `$CostPerSeat` |
-| **ParetoChart** | Bar + überlagerte Linie, Cumulative-Linie hebt 80%-Schwelle visuell hervor (gepunktete Hilfslinie + Annotation „Top X User = 80%") |
-| **UserModelHeatmap** | Eigene Cell-Komponente (Recharts kann das nicht out-of-box gut): Cells als `rounded-md` mit smooth Farbinterpolation Indigo→Rose nach $-Intensität, Hover hebt Zelle + Zeile/Spalte hervor |
-| **ModelMixTreemap** | Recharts-Treemap mit custom Content-Renderer: abgerundete Rechtecke, Modell-Farbe, Label nur in Cells > 60px, hover hebt Cell + zeigt Tooltip |
-| **CostPerRequest** | Horizontale Bar pro Modell, sortiert, mit Modell-Farbe; teure Modelle (>$0.10/req) bekommen Warn-Pill |
-| **DailyBurnRate** | Stacked Area mit Gradient-Fills pro Serie, Hover-Crosshair zeigt Tages-Total + Breakdown im Tooltip, Toggle „nach User / nach Modell" als segmentierter Button |
-| **PoolBurnDown** | Kumulative Line (Ist) + Forecast-Line (dashed) + horizontale Budget-Line (cyan dashed), Schnittpunkt Forecast×Budget mit Annotation („Pool reisst am 24.04."), gefüllter Overshoot-Bereich |
-| **UserDetailTable** | shadcn Table + per-row Sparkline (mini SVG, 80×24px), `exceeds_quota`-Badge rot mit pulse, sortierbare Spalten mit Indikator, sticky Header |
+| **PoolGauge** | Custom half-donut (not Recharts default), sweep animation on mount, overshoot zone red with glow, large centered `$` number with gradient text, `% of pool` label beneath |
+| **KpiTiles** | Mini sparkline area (7 days) in the background of each tile, value in the foreground, delta pill top-right |
+| **UserLeaderboard** | Horizontal bars with orange→rose gradient, value in tabular-nums on the right, avatar initials bubble on the left (hashed background color), fair-share marker as a vertical dashed line at `$CostPerSeat` |
+| **ParetoChart** | Bar + overlaid line, cumulative line visually highlights the 80% threshold (dotted guide line + annotation "Top X users = 80%") |
+| **UserModelHeatmap** | Custom cell component (Recharts doesn't handle this well out of the box): cells as `rounded-md` with smooth color interpolation indigo→rose by dollar intensity, hover highlights the cell + its row/column |
+| **ModelMixTreemap** | Recharts Treemap with custom content renderer: rounded rectangles, model color, label only in cells > 60px, hover highlights cell and shows tooltip |
+| **CostPerRequest** | Horizontal bar per model, sorted, in model color; expensive models (>$0.10/req) get a warning pill |
+| **DailyBurnRate** | Stacked area with gradient fills per series, hover crosshair shows daily total + breakdown in tooltip, "by user / by model" toggle as a segmented button |
+| **PoolBurnDown** | Cumulative line (actual) + forecast line (dashed) + horizontal budget line (cyan dashed), intersection of forecast × budget with annotation ("Pool runs out on 24.04."), filled overshoot zone |
+| **UserDetailTable** | shadcn Table + per-row sparkline (mini SVG, 80×24px), `exceeds_quota` badge in red with pulse, sortable columns with sort indicator, sticky header |
 
-### Definition of Done für „hammermässig"
-- Kein einziger Recharts-Default sichtbar (keine Standard-Tooltips, keine bunte Default-Farbpalette, keine eckigen Bars)
-- Konsistente Modell-Farben über alle Charts hinweg
-- Zahlen alle tabular-nums + `$`/`k`-Formatierung
-- Smooth Animations beim Mount und beim Slider-Re-render
-- Lighthouse > 90 für Performance trotz Polish (Lazy-Mount der Charts mit IntersectionObserver, falls nötig)
-- Visueller A/B-Vergleich vor Implementation-Abschluss: Screenshot eines aktuellen Recharts-Default vs. drainspotter-Chart — der Unterschied muss „nicht mehr dieselbe Liga" sein
+### Definition of Done for "Looks Stunning"
+- No Recharts defaults visible anywhere (no default tooltips, no garish default color palette, no square bars)
+- Consistent model colors across all charts
+- All numbers in tabular-nums with `$`/`k` formatting
+- Smooth animations on mount and on slider re-render
+- Lighthouse > 90 for Performance despite the polish (lazy-mount charts with IntersectionObserver if needed)
+- Visual A/B comparison before implementation sign-off: screenshot of stock Recharts defaults vs. a drainspotter chart — the difference must be "not even the same league"
 
 ## Verification (End-to-End)
 
-1. `npm install && npm run dev` — App startet, Empty-State mit DropZone sichtbar
-2. Sample-CSV (siehe User-Beispiel) per Drag-Drop hochladen — 10 Charts rendern
-3. Slider auf 10 Slots, Cost auf $19 setzen → Pool $190, Forecast erscheint im Gauge
-4. Slider auf $49 (Promo) → Pool $490, Charts updaten reaktiv
-5. Forecast-Toggle zwischen linear/7-Tage-Avg → Forecast-Werte ändern sich
-6. `npm test` — alle Vitest-Tests grün
-7. `npm run build` — `dist/` enthält Static-Assets
-8. `docker compose up --build` — App via Traefik unter konfigurierter Domain erreichbar
-9. Manuell: `av6drone` sollte als Top-Drainer erscheinen (im Sample-CSV $29.24 AIC)
+1. `npm install && npm run dev` — app starts, empty state with DropZone visible
+2. Upload sample CSV (see user example) via drag and drop — all 10 charts render
+3. Set slider to 10 slots, cost to $19 → pool $190, forecast appears in gauge
+4. Set slider to $49 (promo) → pool $490, charts update reactively
+5. Toggle forecast between linear/7-day average → forecast values change
+6. `npm test` — all Vitest tests green
+7. `npm run build` — `dist/` contains static assets
+8. `docker compose up --build` — app reachable via Traefik at configured domain
+9. Manual check: `steve-gastown` should appear as top drainer (in the sample CSV: $29.24 AIC)
 
 ## Open Questions for Implementation Phase
 
-- Konkrete Traefik-Domain & cert-resolver-Name
-- Maximale Anzahl Rows im CSV — vermutlich unbedenklich (<10k), aber falls jemand 100k+ Rows hat: streamen statt batchen
-- Slider-Range für Slots-Anzahl (vermutlich 1–500, finalisieren beim Implement)
+- Specific Traefik domain & cert resolver name
+- Maximum number of rows in the CSV — likely fine (<10k), but if someone uploads 100k+ rows: stream rather than batch
+- Slider range for slot count (likely 1–500, to be finalized during implementation)

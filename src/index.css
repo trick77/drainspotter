@@ -1,0 +1,40 @@
+@import "./print.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+  background-attachment: fixed;
+  color: rgb(241 245 249);
+  font-feature-settings: "cv11", "ss01";
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border backdrop-blur-md shadow-glass;
+    border-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+  .kpi-label {
+    @apply text-xs uppercase tracking-wider;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .kpi-value {
+    @apply text-3xl font-semibold tabular bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent;
+  }
+}
