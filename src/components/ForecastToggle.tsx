@@ -5,7 +5,7 @@ type Props = { value: ForecastMode; onChange: (v: ForecastMode) => void };
 
 const OPTIONS: { value: ForecastMode; label: string }[] = [
   { value: "linear", label: "Linear" },
-  { value: "rolling7", label: "7-Tage-Avg" },
+  { value: "rolling7", label: "7-Day Avg" },
 ];
 
 export function ForecastToggle({ value, onChange }: Props) {

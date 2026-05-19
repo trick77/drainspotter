@@ -34,8 +34,8 @@ export function ParetoChart({ aggregations }: Props) {
       title="Pareto"
       subtitle={
         eightyIdx >= 0
-          ? `Top ${eightyIdx + 1} User ≙ 80 % des Pool-Spends`
-          : "Konzentrations-Verteilung"
+          ? `Top ${eightyIdx + 1} users ≙ 80% of pool spend`
+          : "Concentration distribution"
       }
     >
       <div className="h-[300px]">

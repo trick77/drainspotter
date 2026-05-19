@@ -105,10 +105,9 @@ export default function App() {
           {aggregations.spannedMonths.length > 1 && (
             <div className="mb-6">
               <WarningBanner>
-                CSV enthält Daten aus mehreren Monaten (
-                {aggregations.spannedMonths.join(", ")}). Es wird nur der
-                neueste Monat ({aggregations.monthStart.slice(0, 7)})
-                analysiert.
+                CSV contains data from multiple months (
+                {aggregations.spannedMonths.join(", ")}). Only the latest month ({aggregations.monthStart.slice(0, 7)})
+                is analyzed.
               </WarningBanner>
             </div>
           )}

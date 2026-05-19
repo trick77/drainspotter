@@ -15,7 +15,7 @@ export function DemoDataButton({ onLoad }: Props) {
       className="glass-card px-4 py-2 text-sm flex items-center gap-2 hover:bg-white/8 transition-colors"
     >
       <Sparkles className="w-4 h-4 text-drain-400" />
-      Beispieldaten laden
+      Load sample data
     </button>
   );
 }

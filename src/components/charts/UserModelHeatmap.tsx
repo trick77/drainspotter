@@ -31,8 +31,8 @@ export function UserModelHeatmap({ aggregations, topNUsers = 15 }: Props) {
 
   return (
     <ChartFrame
-      title="User × Modell Heatmap"
-      subtitle="Wer setzt schwergewichtig auf welches Modell"
+      title="User × Model Heatmap"
+      subtitle="Who relies heavily on which model"
       className="col-span-full"
     >
       <div className="overflow-x-auto">

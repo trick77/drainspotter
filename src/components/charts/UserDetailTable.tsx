@@ -67,7 +67,7 @@ export function UserDetailTable({ aggregations, pool }: Props) {
   );
 
   return (
-    <ChartFrame title="User-Details" subtitle={`${rows.length} aktive User`} className="col-span-full">
+    <ChartFrame title="User Details" subtitle={`${rows.length} active users`} className="col-span-full">
       <div className="overflow-x-auto max-h-[480px]">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-ink-900/80 backdrop-blur-sm">
@@ -77,7 +77,7 @@ export function UserDetailTable({ aggregations, pool }: Props) {
               <Th k="totalRequests">Requests</Th>
               <Th k="share">% Pool</Th>
               <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-white/50">
-                7-Tage-Trend
+                7-Day Trend
               </th>
               <th className="px-3 py-2 text-xs uppercase tracking-wider text-white/50">Quota</th>
             </tr>

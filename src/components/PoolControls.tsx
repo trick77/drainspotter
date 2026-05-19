@@ -13,7 +13,7 @@ export function PoolControls({ slots, costPerSeat, onSlotsChange, onCostChange }
     <div className="glass-card p-5 flex flex-col md:flex-row gap-6 items-stretch md:items-center">
       <div className="flex-1">
         <div className="flex items-baseline justify-between mb-2">
-          <div className="kpi-label">Gekaufte Slots</div>
+          <div className="kpi-label">Purchased Slots</div>
           <div className="text-2xl font-semibold tabular text-white">{slots}</div>
         </div>
         <input
@@ -23,7 +23,7 @@ export function PoolControls({ slots, costPerSeat, onSlotsChange, onCostChange }
           value={slots}
           onChange={(e) => onSlotsChange(parseInt(e.target.value, 10))}
           className="w-full accent-drain-400"
-          aria-label="Anzahl gekaufter Slots"
+          aria-label="Number of purchased slots"
         />
       </div>
       <div className="md:w-48">

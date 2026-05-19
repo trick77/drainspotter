@@ -16,7 +16,7 @@ export function PoolGauge({ pool, forecast }: Props) {
   const forecastLen = circumference * Math.min(1, forecastFraction);
 
   return (
-    <ChartFrame title="Pool-Gauge" subtitle={`${formatPercent(pool.percentUsed)} verbraucht`}>
+    <ChartFrame title="Pool Gauge" subtitle={`${formatPercent(pool.percentUsed)} used`}>
       <div className="relative h-[260px] flex items-end justify-center">
         <svg width={size} height={size / 2 + 16} viewBox={`0 0 ${size} ${size / 2 + 16}`}>
           <path
@@ -64,7 +64,7 @@ export function PoolGauge({ pool, forecast }: Props) {
             {formatUsd(pool.spent)}
           </div>
           <div className="text-xs text-white/50 mt-1">
-            von {formatUsd(pool.totalPool)}
+            of {formatUsd(pool.totalPool)}
           </div>
           <div className="text-xs text-white/40 mt-1">
             Forecast: {formatUsd(forecast.forecastEoM)}

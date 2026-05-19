@@ -22,8 +22,8 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
   }));
   return (
     <ChartFrame
-      title="Top Drainer"
-      subtitle={`Top ${data.length} User · Fair-Share = ${formatUsd(pool.fairSharePerSeat)}`}
+      title="Top Drainers"
+      subtitle={`Top ${data.length} users · Fair-Share = ${formatUsd(pool.fairSharePerSeat)}`}
       className="col-span-1 md:col-span-2"
     >
       <div className="h-[360px]">

@@ -26,7 +26,7 @@ export function CostPerRequest({ aggregations }: Props) {
   return (
     <ChartFrame
       title="Cost per Request"
-      subtitle="$ pro Inferenz, je Modell — niedriger = effizienter"
+      subtitle="$ per inference, per model — lower = more efficient"
     >
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
@@ -51,7 +51,7 @@ export function CostPerRequest({ aggregations }: Props) {
               content={
                 <ChartTooltip
                   valueFormatter={(v) => formatUsd(v)}
-                  labelFormatter={(l) => `Modell: ${l}`}
+                  labelFormatter={(l) => `Model: ${l}`}
                 />
               }
             />

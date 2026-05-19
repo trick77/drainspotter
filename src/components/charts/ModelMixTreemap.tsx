@@ -43,7 +43,7 @@ export function ModelMixTreemap({ aggregations }: Props) {
     color: modelColor(m.model),
   }));
   return (
-    <ChartFrame title="Modell-Mix" subtitle="$-Anteil pro Modell">
+    <ChartFrame title="Model Mix" subtitle="$ share per model">
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <Treemap data={data} dataKey="size" stroke="rgba(0,0,0,0.2)" content={<CustomContent />} isAnimationActive>

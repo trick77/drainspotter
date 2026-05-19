@@ -42,8 +42,8 @@ export function PoolBurnDown({ aggregations, pool, forecast, dateRange }: Props)
       title="Pool Burn-Down + Forecast"
       subtitle={
         forecast.pierceDate
-          ? `Pool reisst am ${formatDate(forecast.pierceDate)}`
-          : "Pool hält bis Monatsende"
+          ? `Pool runs dry on ${formatDate(forecast.pierceDate)}`
+          : "Pool lasts until end of month"
       }
       className="col-span-full"
     >
@@ -99,7 +99,7 @@ export function PoolBurnDown({ aggregations, pool, forecast, dateRange }: Props)
                 x={forecast.pierceDate}
                 stroke="#ef4444"
                 strokeDasharray="2 4"
-                label={{ value: "Pool reisst", fill: "#ef4444", fontSize: 10, position: "top" }}
+                label={{ value: "Pool runs dry", fill: "#ef4444", fontSize: 10, position: "top" }}
               />
             )}
           </ComposedChart>

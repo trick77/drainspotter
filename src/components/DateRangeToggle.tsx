@@ -6,7 +6,7 @@ type Props = { value: DateRange; onChange: (v: DateRange) => void };
 const OPTIONS: { value: DateRange; label: string }[] = [
   { value: "7d", label: "7d" },
   { value: "14d", label: "14d" },
-  { value: "all", label: "Monat" },
+  { value: "all", label: "Month" },
 ];
 
 export function DateRangeToggle({ value, onChange }: Props) {

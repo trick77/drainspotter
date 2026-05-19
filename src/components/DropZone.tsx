@@ -45,7 +45,7 @@ export function DropZone({ onFile, hero = false }: Props) {
       <Upload className={clsx("text-white/60", hero ? "w-16 h-16" : "w-8 h-8")} />
       <div className="text-center">
         <div className={clsx("font-medium", hero ? "text-2xl" : "text-base")}>
-          CSV hier ablegen oder klicken
+          Drop CSV here or click
         </div>
         <div className="text-sm text-white/50 mt-1">
           GitHub Copilot premiumRequestUsageReport
