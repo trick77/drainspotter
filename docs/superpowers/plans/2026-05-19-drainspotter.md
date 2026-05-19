@@ -3,9 +3,9 @@ ainspotter Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build drainspotter — a static-SPA Cockpit, das einen GitHub-Copilot-Usage-CSV per Drag/Drop einliest und in 10 polierten Charts + EoM-Forecast visualisiert, deployed via nginx-Container hinter Traefik.
+**Goal:** Build drainspotter — a static SPA cockpit that ingests a GitHub Copilot usage CSV via drag-and-drop and visualizes it in 10 polished charts plus an EoM forecast, deployed as an nginx container behind Traefik.
 
-**Architecture:** Reine Client-Side-React-App ohne Backend. Strikte Trennung zwischen Berechnungs-Modulen in `src/lib/` (rein TS, DOM-frei, voll-getestet via Vitest) und UI-Komponenten in `src/components/`. Data-Flow: `CSV → parseUsageCsv() → aggregate() → {pool-math, forecaster} → Charts`. Settings via LocalStorage (`drainspotter:settings:v1`). PDF-Export via `window.print()` + Print-Stylesheet (SVG bleibt vektoriell).
+**Architecture:** Pure client-side React app with no backend. Strict separation between computation modules in `src/lib/` (pure TS, DOM-free, fully tested via Vitest) and UI components in `src/components/`. Data flow: `CSV → parseUsageCsv() → aggregate() → {pool-math, forecaster} → Charts`. Settings via LocalStorage (`drainspotter:settings:v1`). PDF export via `window.print()` + print stylesheet (SVG stays vector).
 
 **Tech Stack:** Vite + React 18 + TypeScript · Tailwind CSS + shadcn/ui · Recharts (Full-Custom-Theme) · PapaParse · Vitest + @testing-library/jest-dom · nginx:alpine + Containerfile + compose.yaml (Traefik-Labels)
 
@@ -30,13 +30,13 @@ drainspotter/
 ├── index.html
 ├── .gitignore
 ├── public/
-│   └── demo.csv                          # anonymisierte Demo-Daten
+│   └── demo.csv                          # anonymized demo data
 ├── scripts/
-│   └── generate-demo-csv.mjs             # einmaliger Generator für demo.csv
+│   └── generate-demo-csv.mjs             # one-shot generator for demo.csv
 ├── src/
 │   ├── main.tsx
-│   ├── App.tsx                           # Layout, State, Orchestrierung
-│   ├── index.css                         # Tailwind Basis + globale CSS-Variablen
+│   ├── App.tsx                           # Layout, state, orchestration
+│   ├── index.css                         # Tailwind base + global CSS variables
 │   ├── print.css                         # @media print Overrides
 │   ├── lib/
 │   │   ├── types.ts                      # UsageRow, Aggregations, PoolConfig, Forecast, Settings
@@ -52,7 +52,7 @@ drainspotter/
 │   │   ├── settings-store.test.ts
 │   │   ├── format.ts                     # de-CH locale formatters
 │   │   ├── format.test.ts
-│   │   └── model-colors.ts               # deterministische Farb-Map
+│   │   └── model-colors.ts               # deterministic color map
 │   ├── components/
 │   │   ├── DropZone.tsx
 │   │   ├── DemoDataButton.tsx
@@ -65,7 +65,7 @@ drainspotter/
 │   │   ├── ChartFrame.tsx                # glass-card wrapper für Charts
 │   │   ├── ChartTooltip.tsx              # custom Recharts tooltip
 │   │   ├── ChartLegend.tsx               # custom Recharts legend
-│   │   ├── ChartDefs.tsx                 # SVG <defs> mit allen Gradients
+│   │   ├── ChartDefs.tsx                 # SVG <defs> with all gradients
 │   │   ├── charts/
 │   │   │   ├── PoolGauge.tsx
 │   │   │   ├── KpiTiles.tsx
@@ -79,7 +79,7 @@ drainspotter/
 │   │   │   └── UserDetailTable.tsx
 │   │   └── ui/                           # shadcn primitives (added on demand)
 │   └── fixtures/
-│       └── sample.csv                    # winziges Fixture für Tests
+│       └── sample.csv                    # minimal fixture for tests
 └── docs/
     └── superpowers/
         ├── specs/2026-05-19-drainspotter-design.md
@@ -454,7 +454,7 @@ export default function App() {
 - [ ] **Step 5: Run dev server, visually verify**
 
 Run: `npm run dev`
-Expected: Dunkler Indigo→Slate Gradient-Background, glass-card mit Gradient-Zahlentext sichtbar bei `http://localhost:5173`.
+Expected: Dark indigo-to-slate gradient background, glass-card with gradient number text visible at `http://localhost:5173`.
 
 - [ ] **Step 6: Commit**
 
@@ -1740,7 +1740,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const TOP_DRAINERS = [
-  "joe-gastown",            // explicitly #1
+  "steve-gastown",            // explicitly #1
   "chief-token-officer",
   "lord-of-the-pool",
   "count-contextula",
@@ -1929,8 +1929,8 @@ Expected: writes `public/demo.csv`, prints mapping summary to stdout.
 
 - [ ] **Step 5: Sanity-check the output**
 
-Run: `head -5 public/demo.csv && echo "---" && grep -c joe-gastown public/demo.csv`
-Expected: header line + 4 data rows shown; `joe-gastown` appears in ≥1 row.
+Run: `head -5 public/demo.csv && echo "---" && grep -c steve-gastown public/demo.csv`
+Expected: header line + 4 data rows shown; `steve-gastown` appears in ≥1 row.
 
 - [ ] **Step 6: Commit**
 
@@ -2456,7 +2456,7 @@ export default function App() {
 - [ ] **Step 2: Verify dev server**
 
 Run: `npm run dev`
-Expected: Empty-State with hero DropZone and "Beispieldaten laden" visible. Clicking demo button loads CSV, controls appear, charts grid empty (placeholder).
+Expected: Empty state with hero DropZone and "Load demo data" visible. Clicking the demo button loads the CSV, controls appear, charts grid empty (placeholder).
 
 - [ ] **Step 3: Commit**
 
@@ -2640,7 +2640,7 @@ git commit -m "feat: custom chart legend"
 
 ## Phase 6: Charts — 10 implementations
 
-> **TDD note for charts:** Charts are verified visually with the demo CSV (per spec: "Kein Component-Testing im MVP — Charts werden visuell verifiziert"). Each task ends with a manual verification step on `npm run dev` + demo data.
+> **TDD note for charts:** Charts are verified visually with the demo CSV (per spec: "No component testing in the MVP — charts are verified visually"). Each task ends with a manual verification step on `npm run dev` + demo data.
 
 ### Task 21: Chart 1 — KpiTiles
 
@@ -2996,7 +2996,7 @@ import { UserLeaderboard } from "@/components/charts/UserLeaderboard";
 - [ ] **Step 3: Visual verify**
 
 Run: `npm run dev`, load demo.
-Expected: horizontal bar chart with `joe-gastown` at top, gradient bars, Fair-Share line visible (cyan dashed) at $19 mark.
+Expected: horizontal bar chart with `steve-gastown` at top, gradient bars, Fair-Share line visible (cyan dashed) at $19 mark.
 
 - [ ] **Step 4: Commit**
 
@@ -3572,7 +3572,7 @@ import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
 
 - [ ] **Step 3: Visual verify + commit**
 
-Run: `npm run dev`, load demo, toggle User/Modell + 7d/14d/Monat.
+Run: `npm run dev`, load demo, toggle User/Model + 7d/14d/Month.
 Expected: stacked area chart re-renders smoothly.
 
 ```bash
@@ -4098,20 +4098,20 @@ npm run dev
 ```
 
 Open `http://localhost:5173`.
-Expected: Empty-State with hero DropZone and "Beispieldaten laden" button.
+Expected: Empty state with hero DropZone and "Load demo data" button.
 
 - [ ] **Step 2: Demo data flow**
 
-Click "Beispieldaten laden".
-Expected: All 10 charts render. `joe-gastown` appears as Top-1 in UserLeaderboard. `copilot-bünzli` appears at the bottom of UserDetailTable when sorted ascending by Spent.
+Click "Load demo data".
+Expected: All 10 charts render. `steve-gastown` appears as Top-1 in UserLeaderboard. `copilot-bünzli` appears at the bottom of UserDetailTable when sorted ascending by Spent.
 
 - [ ] **Step 3: Controls**
 
 - Drag the Slots-Slider from 100 → 200. PoolGauge re-renders smoothly.
 - Change Cost-per-Seat to 49. Pool doubles.
 - Toggle Forecast: linear ↔ rolling7. KpiTiles + PoolBurnDown re-render.
-- Toggle Range: 7d → 14d → Monat. DailyBurnRate + PoolBurnDown filter accordingly.
-- Toggle DailyBurnRate User/Modell.
+- Toggle Range: 7d → 14d → Month. DailyBurnRate + PoolBurnDown filter accordingly.
+- Toggle DailyBurnRate User/Model.
 - Sort UserDetailTable by clicking headers.
 
 Expected: every interaction updates instantly; no visible re-mount flicker.
@@ -4134,7 +4134,7 @@ Drop a CSV missing `aic_gross_amount` column. Expected: amber WarningBanner with
 
 - [ ] **Step 8: PDF export**
 
-Click "PDF exportieren". Print preview opens. Confirm:
+Click "Export PDF". Print preview opens. Confirm:
 - White background
 - All 10 charts visible across pages
 - Numbers readable
@@ -4184,7 +4184,7 @@ gh pr create --title "feat: drainspotter MVP — 10-chart Copilot usage cockpit"
 - Settings persistence via LocalStorage
 - PDF export via window.print() + print-stylesheet
 - nginx-container + compose.yaml with Traefik labels
-- Demo CSV with funny aliases (joe-gastown #1 drainer, copilot-bünzli #1 lurker)
+- Demo CSV with funny aliases (steve-gastown #1 drainer, copilot-bünzli #1 lurker)
 
 ## Test plan
 - [x] `npm test` (Vitest)
@@ -4201,12 +4201,12 @@ EOF
 
 ## Self-Review Notes (inline fixes already applied)
 
-- Spec section "10 Fragen → 10 Charts" — covered by Tasks 21–30.
+- Spec section "10 Questions → 10 Charts" — covered by Tasks 21–30.
 - Spec section "Pool & Forecast Math" — covered by Tasks 8–9.
 - Spec section "Error Handling" — covered by Tasks 6 (parser), 17 (multi-month banner + parse error banner).
-- Spec section "Visual Design Notes Chart-Polish-Pflicht" — gradients in Task 18 ChartDefs, custom tooltip in Task 19, custom legend in Task 20, animated mount via `isAnimationActive` in each chart, abgerundete Bars via `radius={[]}` in Tasks 23/27, dashed gridlines via `strokeDasharray="4 4"` in charts that have grids.
-- Spec section "Locale: de-CH" — covered by Task 5 (`format.ts`).
-- Spec section "Demo-CSV mit Top-Drainer/Bottom-Lurker/Middle-Pool" — Task 12.
+- Spec section "Visual Design Notes Chart-Polish Requirements" — gradients in Task 18 ChartDefs, custom tooltip in Task 19, custom legend in Task 20, animated mount via `isAnimationActive` in each chart, rounded bars via `radius={[]}` in Tasks 23/27, dashed gridlines via `strokeDasharray="4 4"` in charts that have grids.
+- Spec section "Locale: Swiss" — covered by Task 5 (`format.ts`).
+- Spec section "Demo CSV with Top-Drainer/Bottom-Lurker/Middle-Pool" — Task 12.
 - Spec section "Print/PDF" — Task 31.
 - Spec section "Container/compose/Traefik" — Tasks 32–33.
 - Spec section "LocalStorage settings" — Task 10 + wiring in Task 17.

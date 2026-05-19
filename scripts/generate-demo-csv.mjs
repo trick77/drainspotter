@@ -16,7 +16,7 @@ const ROOT = resolve(__dirname, "..");
 // Name lists (exact order matters)
 // ---------------------------------------------------------------------------
 const TOP_DRAINERS = [
-  "joe-gastown",
+  "steve-gastown",
   "chief-token-officer",
   "lord-of-the-pool",
   "count-contextula",
