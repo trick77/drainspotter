@@ -69,11 +69,21 @@ export default function App() {
       <ChartDefs />
       <header className="flex items-center justify-between mb-8 print:mb-4">
         <div className="flex items-center gap-4">
-          <img
-            src="/drainspotter.png"
-            alt="drainspotter"
-            className="h-10 md:h-14 w-auto"
-          />
+          <button
+            type="button"
+            onClick={() => {
+              setRows(null);
+              setError(null);
+            }}
+            className="print:cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 rounded"
+            aria-label="Reset to upload"
+          >
+            <img
+              src="/drainspotter.png"
+              alt="drainspotter"
+              className="h-10 md:h-14 w-auto"
+            />
+          </button>
           <p className="hidden sm:block text-sm text-white/50 mt-3 md:mt-5">
             GitHub Copilot Usage Dashboard
           </p>
