@@ -39,7 +39,7 @@ export function PoolBurnDown({ aggregations, pool, forecast }: Props) {
     >
       <div className="h-[340px]">
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
+          <ComposedChart data={data} margin={{ top: 24, right: 64, left: 0, bottom: 4 }}>
             <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" vertical={false} />
             <XAxis
               dataKey="date"
@@ -89,7 +89,7 @@ export function PoolBurnDown({ aggregations, pool, forecast }: Props) {
                 x={forecast.pierceDate}
                 stroke="#ef4444"
                 strokeDasharray="2 4"
-                label={{ value: "Pool runs dry", fill: "#ef4444", fontSize: 10, position: "top" }}
+                label={{ value: "Pool runs dry", fill: "#ef4444", fontSize: 10, position: "insideTopLeft", offset: 6 }}
               />
             )}
           </ComposedChart>
