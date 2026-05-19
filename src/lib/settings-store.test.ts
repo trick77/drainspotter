@@ -1,26 +1,25 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { loadSettings, saveSettings, DEFAULT_SETTINGS } from "./settings-store";
 
-// Ensure we have a proper localStorage implementation for tests
-const mockStorage: Record<string, string> = {};
-const mockLocalStorage = {
-  getItem: (key: string) => mockStorage[key] ?? null,
-  setItem: (key: string, value: string) => {
-    mockStorage[key] = value;
-  },
-  removeItem: (key: string) => {
-    delete mockStorage[key];
+const store: Record<string, string> = {};
+const mockLocalStorage: Storage = {
+  get length() {
+    return Object.keys(store).length;
   },
   clear: () => {
-    for (const key in mockStorage) {
-      delete mockStorage[key];
-    }
+    for (const k of Object.keys(store)) delete store[k];
   },
-  length: 0,
-  key: (index: number) => null,
+  getItem: (k) => (k in store ? store[k] : null),
+  key: (i) => Object.keys(store)[i] ?? null,
+  removeItem: (k) => {
+    delete store[k];
+  },
+  setItem: (k, v) => {
+    store[k] = v;
+  },
 };
 
-Object.defineProperty(window, "localStorage", {
+Object.defineProperty(globalThis, "localStorage", {
   value: mockLocalStorage,
   writable: true,
 });
