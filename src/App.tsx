@@ -74,8 +74,8 @@ export default function App() {
             alt="drainspotter"
             className="h-10 md:h-14 w-auto"
           />
-          <p className="hidden sm:block text-sm text-white/50">
-            GitHub Copilot Usage Cockpit
+          <p className="hidden sm:block text-sm text-white/50 mt-3 md:mt-5">
+            GitHub Copilot Usage Dashboard
           </p>
         </div>
         {rows && (
@@ -94,7 +94,20 @@ export default function App() {
       {!rows && (
         <div className="flex flex-col gap-4">
           <DropZone onFile={handleFile} hero />
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs text-white/40 text-center max-w-md">
+              Your CSV is parsed in your browser. Nothing is uploaded, logged,
+              or retained — close the tab and it's gone. Source on{" "}
+              <a
+                href="https://github.com/trick77/drainspotter"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/60 underline decoration-white/20 hover:text-white/80"
+              >
+                GitHub
+              </a>
+              .
+            </p>
             <DemoDataButton onLoad={handleFile} />
           </div>
         </div>
