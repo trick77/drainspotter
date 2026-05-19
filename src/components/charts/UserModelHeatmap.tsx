@@ -33,7 +33,7 @@ export function UserModelHeatmap({ aggregations, topNUsers = 15 }: Props) {
     <ChartFrame
       title="User × Model Heatmap"
       subtitle="Who relies heavily on which model"
-      className="col-span-1"
+      className="col-span-full"
     >
       <div className="overflow-x-auto">
         <table className="text-xs border-separate" style={{ borderSpacing: "3px" }}>
