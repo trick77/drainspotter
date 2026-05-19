@@ -5,9 +5,22 @@ updates:
     schedule:
       interval: weekly
     groups:
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      vite:
+        patterns: ["vite", "@vitejs/*", "@types/node"]
+      testing:
+        patterns: ["vitest", "@testing-library/*", "jsdom"]
+      styling:
+        patterns: ["tailwindcss", "postcss", "autoprefixer"]
+      typescript:
+        patterns: ["typescript"]
       npm-minor-and-patch:
         patterns: ["*"]
         update-types: ["minor", "patch"]
+      npm-major:
+        patterns: ["*"]
+        update-types: ["major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
