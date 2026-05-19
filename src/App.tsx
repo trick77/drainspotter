@@ -19,6 +19,8 @@ import { UserLeaderboard } from "@/components/charts/UserLeaderboard";
 import { ParetoChart } from "@/components/charts/ParetoChart";
 import { UserModelHeatmap } from "@/components/charts/UserModelHeatmap";
 import { ModelMixTreemap } from "@/components/charts/ModelMixTreemap";
+import { CostPerRequest } from "@/components/charts/CostPerRequest";
+import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -155,6 +157,13 @@ export default function App() {
             <ParetoChart aggregations={aggregations} />
             <ModelMixTreemap aggregations={aggregations} />
             <UserModelHeatmap aggregations={aggregations} />
+            <CostPerRequest aggregations={aggregations} />
+            <DailyBurnRate
+              aggregations={aggregations}
+              groupBy={settings.burnRateGroupBy}
+              onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
+              dateRange={settings.dateRange}
+            />
           </div>
         </>
       )}
