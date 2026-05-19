@@ -299,7 +299,7 @@ Recharts wird komplett gethemed — kein einziger Default bleibt sichtbar:
 6. `npm test` — alle Vitest-Tests grün
 7. `npm run build` — `dist/` enthält Static-Assets
 8. `docker compose up --build` — App via Traefik unter konfigurierter Domain erreichbar
-9. Manuell: `av6drone` sollte als Top-Drainer erscheinen (im Sample-CSV $29.24 AIC)
+9. Manual check: `joe-gastown` should appear as top drainer (in the sample CSV: $29.24 AIC)
 
 ## Open Questions for Implementation Phase
 
