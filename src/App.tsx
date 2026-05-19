@@ -154,18 +154,18 @@ export default function App() {
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
             <PoolGauge pool={pool} forecast={fc} />
+            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} dateRange={settings.dateRange} />
             <UserLeaderboard aggregations={aggregations} pool={pool} />
             <ParetoChart aggregations={aggregations} />
-            <ModelMixTreemap aggregations={aggregations} />
-            <UserModelHeatmap aggregations={aggregations} />
-            <CostPerRequest aggregations={aggregations} />
             <DailyBurnRate
               aggregations={aggregations}
               groupBy={settings.burnRateGroupBy}
               onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
               dateRange={settings.dateRange}
             />
-            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} dateRange={settings.dateRange} />
+            <UserModelHeatmap aggregations={aggregations} />
+            <ModelMixTreemap aggregations={aggregations} />
+            <CostPerRequest aggregations={aggregations} />
             <UserDetailTable aggregations={aggregations} pool={pool} />
           </div>
         </>
