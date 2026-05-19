@@ -1,0 +1,22 @@
+services:
+  drainspotter:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: drainspotter:latest
+    container_name: drainspotter
+    restart: unless-stopped
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.drainspotter.rule=Host(`drainspotter.example.com`)"
+      - "traefik.http.routers.drainspotter.entrypoints=websecure"
+      - "traefik.http.routers.drainspotter.tls=true"
+      - "traefik.http.routers.drainspotter.tls.certresolver=letsencrypt"
+      - "traefik.http.services.drainspotter.loadbalancer.server.port=80"
+
+networks:
+  traefik:
+    external: true
