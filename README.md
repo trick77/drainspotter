@@ -1,6 +1,8 @@
-# drainspotter
+<p align="center">
+  <img src="public/drainspotter.png" alt="drainspotter" width="320">
+</p>
 
-A browser-only cockpit for the GitHub Copilot `premiumRequestUsageReport_*.csv`.
+A browser-only dashboard for the GitHub Copilot `premiumRequestUsageReport_*.csv`.
 
 GitHub Copilot is moving to usage-based billing on June 1, 2026. Each Business
 seat ($19/month) brings $19 of AI Credits. The credits aren't reserved per
