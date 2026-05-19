@@ -13,6 +13,8 @@ import { DateRangeToggle } from "@/components/DateRangeToggle";
 import { ExportPdfButton } from "@/components/ExportPdfButton";
 import { WarningBanner } from "@/components/WarningBanner";
 import { ChartDefs } from "@/components/ChartDefs";
+import { KpiTiles } from "@/components/charts/KpiTiles";
+import { PoolGauge } from "@/components/charts/PoolGauge";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -143,7 +145,8 @@ export default function App() {
             data-pool-percent={pool.percentUsed.toFixed(2)}
             data-agg-rows={aggregations.rowCount}
           >
-            {/* Charts wired in subsequent tasks */}
+            <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
+            <PoolGauge pool={pool} forecast={fc} />
           </div>
         </>
       )}
