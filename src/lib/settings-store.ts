@@ -5,7 +5,7 @@ const KEY = "drainspotter:settings:v1";
 export const DEFAULT_SETTINGS: Settings = {
   purchasedSlots: 100,
   costPerSeat: 19,
-  forecastMode: "linear",
+  forecastMode: "rolling7",
   burnRateGroupBy: "user",
   tableSort: { column: "totalAic", direction: "desc" },
 };

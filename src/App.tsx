@@ -8,7 +8,6 @@ import type { UsageRow, Settings } from "@/lib/types";
 import { DropZone } from "@/components/DropZone";
 import { DemoDataButton } from "@/components/DemoDataButton";
 import { PoolControls } from "@/components/PoolControls";
-import { ForecastToggle } from "@/components/ForecastToggle";
 import { ExportPdfButton } from "@/components/ExportPdfButton";
 import { WarningBanner } from "@/components/WarningBanner";
 import { ChartDefs } from "@/components/ChartDefs";
@@ -122,19 +121,6 @@ export default function App() {
                 setSettings({ ...settings, costPerSeat: v })
               }
             />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 mb-6 print:hidden">
-            <span className="text-xs text-white/50 uppercase tracking-wider">
-              Forecast
-            </span>
-            <ForecastToggle
-              value={settings.forecastMode}
-              onChange={(v) => setSettings({ ...settings, forecastMode: v })}
-            />
-            <div className="ml-auto">
-              <DropZone onFile={handleFile} />
-            </div>
           </div>
 
           <div
