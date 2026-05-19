@@ -21,6 +21,8 @@ import { UserModelHeatmap } from "@/components/charts/UserModelHeatmap";
 import { ModelMixTreemap } from "@/components/charts/ModelMixTreemap";
 import { CostPerRequest } from "@/components/charts/CostPerRequest";
 import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
+import { PoolBurnDown } from "@/components/charts/PoolBurnDown";
+import { UserDetailTable } from "@/components/charts/UserDetailTable";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -164,6 +166,8 @@ export default function App() {
               onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
               dateRange={settings.dateRange}
             />
+            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} dateRange={settings.dateRange} />
+            <UserDetailTable aggregations={aggregations} pool={pool} />
           </div>
         </>
       )}
