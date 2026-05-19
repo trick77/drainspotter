@@ -134,9 +134,9 @@ export default function App() {
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
             <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
-            <PoolGauge pool={pool} forecast={fc} />
-            <UserLeaderboard aggregations={aggregations} pool={pool} />
             <ParetoChart aggregations={aggregations} />
+            <UserLeaderboard aggregations={aggregations} pool={pool} />
+            <PoolGauge pool={pool} forecast={fc} />
             <DailyBurnRate
               aggregations={aggregations}
               groupBy={settings.burnRateGroupBy}
