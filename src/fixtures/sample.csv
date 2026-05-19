@@ -1,0 +1,4 @@
+"date","username","product","sku","model","quantity","unit_type","applied_cost_per_quantity","gross_amount","discount_amount","net_amount","exceeds_quota","total_monthly_quota","organization","cost_center_name","aic_quantity","aic_gross_amount"
+"2026-04-01","alice","copilot","copilot_premium_request","GPT-5.4","10","requests","0.04","0.4","0.4","0","False","300","DemoOrg","","100.5","1.005"
+"2026-04-01","bob","copilot","copilot_premium_request","GPT-5.3-Codex","5","requests","0.04","0.2","0.2","0","True","300","DemoOrg","","50.25","0.5025"
+"2026-04-02","alice","copilot","copilot_premium_request","GPT-5.4","8","requests","0.04","0.32","0.32","0","False","300","DemoOrg","","80.1","0.801"
