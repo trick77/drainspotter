@@ -4,6 +4,7 @@ import {
   XAxis,
   YAxis,
   Cell,
+  LabelList,
   ResponsiveContainer,
   ReferenceLine,
   Tooltip,
@@ -28,7 +29,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
     >
       <div className="h-[360px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ left: 8, right: 24, top: 4, bottom: 4 }}>
+          <BarChart data={data} layout="vertical" margin={{ left: 8, right: 72, top: 4, bottom: 4 }}>
             <XAxis
               type="number"
               tickLine={false}
@@ -63,6 +64,12 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               {data.map((_, i) => (
                 <Cell key={i} fill="url(#drainBarH)" />
               ))}
+              <LabelList
+                dataKey="spent"
+                position="right"
+                formatter={(v: number) => formatUsd(v)}
+                style={{ fill: "rgba(255,255,255,0.85)", fontSize: 11, fontVariantNumeric: "tabular-nums" }}
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
