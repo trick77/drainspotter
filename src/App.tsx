@@ -68,11 +68,13 @@ export default function App() {
     <div className="min-h-screen px-6 py-6 md:px-10 md:py-8 max-w-[1600px] mx-auto">
       <ChartDefs />
       <header className="flex items-center justify-between mb-8 print:mb-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent">
-            drainspotter
-          </h1>
-          <p className="text-sm text-white/50 mt-1">
+        <div className="flex items-center gap-4">
+          <img
+            src="/drainspotter.png"
+            alt="drainspotter"
+            className="h-12 md:h-16 w-auto"
+          />
+          <p className="hidden sm:block text-sm text-white/50">
             GitHub Copilot Usage Cockpit
           </p>
         </div>
