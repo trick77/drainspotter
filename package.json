@@ -12,28 +12,28 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^19.2.6",
-    "papaparse": "^5.4.1",
-    "recharts": "^2.13.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.5.4",
     "class-variance-authority": "^0.7.0",
-    "lucide-react": "^1.16.0"
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.16.0",
+    "papaparse": "^5.4.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "recharts": "^2.13.0",
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
     "@types/node": "^25.9.1",
     "@types/papaparse": "^5.3.15",
-    "@types/react": "^18.3.12",
+    "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
-    "vitest": "^2.1.4",
-    "@testing-library/jest-dom": "^6.6.3",
-    "jsdom": "^25.0.1",
-    "tailwindcss": "^3.4.14",
-    "postcss": "^8.4.47",
-    "autoprefixer": "^10.4.20"
+    "vitest": "^2.1.4"
   }
 }
