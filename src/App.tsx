@@ -15,6 +15,8 @@ import { WarningBanner } from "@/components/WarningBanner";
 import { ChartDefs } from "@/components/ChartDefs";
 import { KpiTiles } from "@/components/charts/KpiTiles";
 import { PoolGauge } from "@/components/charts/PoolGauge";
+import { UserLeaderboard } from "@/components/charts/UserLeaderboard";
+import { ParetoChart } from "@/components/charts/ParetoChart";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -147,6 +149,8 @@ export default function App() {
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
             <PoolGauge pool={pool} forecast={fc} />
+            <UserLeaderboard aggregations={aggregations} pool={pool} />
+            <ParetoChart aggregations={aggregations} />
           </div>
         </>
       )}
