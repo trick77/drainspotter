@@ -72,7 +72,7 @@ export default function App() {
           <img
             src="/drainspotter.png"
             alt="drainspotter"
-            className="h-12 md:h-16 w-auto"
+            className="h-14 md:h-20 w-auto"
           />
           <p className="hidden sm:block text-sm text-white/50">
             GitHub Copilot Usage Cockpit
