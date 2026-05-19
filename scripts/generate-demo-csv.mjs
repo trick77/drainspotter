@@ -208,7 +208,6 @@ for (let i = 0; i < topUsers.length; i++) {
   console.log(`  ${TOP_DRAINERS[i].padEnd(25)} ← ${topUsers[i]} (total: ${totals.get(topUsers[i]).toFixed(4)})`);
 }
 
-const assignedLurkers = sortedAscPositive.filter(u => BOTTOM_LURKERS.includes(aliasMap.get(u)));
 console.log("\n--- Bottom-10 Lurkers ---");
 let shown = 0;
 for (const user of sortedAscPositive) {
