@@ -17,6 +17,8 @@ import { KpiTiles } from "@/components/charts/KpiTiles";
 import { PoolGauge } from "@/components/charts/PoolGauge";
 import { UserLeaderboard } from "@/components/charts/UserLeaderboard";
 import { ParetoChart } from "@/components/charts/ParetoChart";
+import { UserModelHeatmap } from "@/components/charts/UserModelHeatmap";
+import { ModelMixTreemap } from "@/components/charts/ModelMixTreemap";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -151,6 +153,8 @@ export default function App() {
             <PoolGauge pool={pool} forecast={fc} />
             <UserLeaderboard aggregations={aggregations} pool={pool} />
             <ParetoChart aggregations={aggregations} />
+            <ModelMixTreemap aggregations={aggregations} />
+            <UserModelHeatmap aggregations={aggregations} />
           </div>
         </>
       )}
