@@ -145,8 +145,8 @@ export default function App() {
             data-agg-rows={aggregations.rowCount}
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
-            <PoolGauge pool={pool} forecast={fc} />
             <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
+            <PoolGauge pool={pool} forecast={fc} />
             <UserLeaderboard aggregations={aggregations} pool={pool} />
             <ParetoChart aggregations={aggregations} />
             <DailyBurnRate
