@@ -46,19 +46,13 @@ export function PoolGauge({ pool, forecast }: Props) {
               opacity={0.6}
             />
           )}
-          {overshoot && (
-            <text
-              x={size - 12}
-              y={size / 2 - 4}
-              textAnchor="end"
-              fill="#ef4444"
-              fontSize={11}
-              fontWeight={600}
-            >
-              ! over budget
-            </text>
-          )}
         </svg>
+        {overshoot && (
+          <div className="absolute top-0 right-0 px-2 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+            over budget
+          </div>
+        )}
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 pointer-events-none">
           <div className="text-4xl font-semibold tabular bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent">
             {formatUsd(pool.spent)}
