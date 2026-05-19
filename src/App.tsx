@@ -12,6 +12,7 @@ import { ForecastToggle } from "@/components/ForecastToggle";
 import { DateRangeToggle } from "@/components/DateRangeToggle";
 import { ExportPdfButton } from "@/components/ExportPdfButton";
 import { WarningBanner } from "@/components/WarningBanner";
+import { ChartDefs } from "@/components/ChartDefs";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -57,6 +58,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen px-6 py-6 md:px-10 md:py-8 max-w-[1600px] mx-auto">
+      <ChartDefs />
       <header className="flex items-center justify-between mb-8 print:mb-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent">
