@@ -1,22 +1,30 @@
 services:
   drainspotter:
+    container_name: drainspotter
     build:
       context: .
       dockerfile: Containerfile
-    image: drainspotter:latest
-    container_name: drainspotter
     restart: unless-stopped
+    healthcheck:
+      test: wget -q -O - http://localhost/ >/dev/null || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    expose:
+      - 80
     networks:
       - traefik
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.drainspotter.rule=Host(`drainspotter.example.com`)"
-      - "traefik.http.routers.drainspotter.entrypoints=websecure"
-      - "traefik.http.routers.drainspotter.tls=true"
-      - "traefik.http.routers.drainspotter.tls.certresolver=letsencrypt"
-      - "traefik.http.services.drainspotter.loadbalancer.server.port=80"
+      com.centurylinklabs.watchtower.enable: "false"
+      traefik.enable: "true"
+      traefik.http.routers.drainspotter.rule: "Host(`drainspotter.example.com`)"
+      traefik.http.routers.drainspotter.entrypoints: "websecure"
+      traefik.http.routers.drainspotter.tls.certresolver: "letsencrypt"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
 
 networks:
   traefik:
+    name: traefik
     external: true
