@@ -1747,7 +1747,7 @@ const TOP_DRAINERS = [
   "sir-burns-a-lot",
   "duke-of-drain",
   "promptzilla",
-  "token-schredder",
+  "token-shredder",
   "quota-muncher",
   "voldetoken",
 ];
