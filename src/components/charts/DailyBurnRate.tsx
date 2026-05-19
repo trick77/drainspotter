@@ -58,7 +58,7 @@ export function DailyBurnRate({
     <ChartFrame
       title="Daily Burn-Rate"
       subtitle={`Stacked, grouped by ${groupBy === "user" ? "user" : "model"}`}
-      className="col-span-full"
+      className="col-span-1 xl:col-span-2"
       actions={
         <div className="inline-flex rounded-lg bg-white/5 border border-white/10 p-1 print:hidden">
           {(["user", "model"] as const).map((g) => (
