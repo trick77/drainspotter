@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { ChartFrame } from "@/components/ChartFrame";
 import { formatUsd } from "@/lib/format";
@@ -35,6 +35,10 @@ export function UserDetailTable({ aggregations, pool }: Props) {
     dir: "desc",
   });
   const [query, setQuery] = useState("");
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (scrollerRef.current) scrollerRef.current.scrollTop = 0;
+  }, [query]);
   const allRows = [...aggregations.perUser].map((u) => ({
     ...u,
     share: pool.totalPool > 0 ? u.totalAic / pool.totalPool : 0,
@@ -92,7 +96,7 @@ export function UserDetailTable({ aggregations, pool }: Props) {
           className="w-full bg-white/5 border border-white/10 rounded-md pl-8 pr-3 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
         />
       </div>
-      <div className="overflow-x-auto max-h-[480px]">
+      <div ref={scrollerRef} className="overflow-auto h-[480px] [overflow-anchor:none]">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-ink-900/80 backdrop-blur-sm">
             <tr>
