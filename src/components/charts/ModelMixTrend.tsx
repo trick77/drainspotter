@@ -43,7 +43,7 @@ export function ModelMixTrend({ aggregations, topN = 6 }: Props) {
     <ChartFrame
       title="Model Adoption"
       subtitle="Share of daily spend per model"
-      className="col-span-1 xl:col-span-2"
+      className="col-span-1"
     >
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">

@@ -20,11 +20,14 @@ export type UsageRow = {
 
 export type ForecastMode = "linear" | "rolling7";
 
+export type ForecastGrowth = "conservative" | "moderate" | "aggressive";
+
 export type Settings = {
   purchasedSlots: number;
   costPerSeat: number;
   forecastMode: ForecastMode;
   burnRateGroupBy: "user" | "model";
+  forecastGrowth: ForecastGrowth;
   tableSort: { column: string; direction: "asc" | "desc" };
 };
 
