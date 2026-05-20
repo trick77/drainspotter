@@ -55,7 +55,7 @@ export function UserModelHeatmap({ aggregations, topNUsers = 15 }: Props) {
             {users.map((u) => (
               <tr key={u}>
                 <td className="text-white/80 px-2 py-1 sticky left-0 bg-transparent whitespace-nowrap">
-                  {u}
+                  <span className="uname">{u}</span>
                 </td>
                 {models.map((m) => {
                   const v = cellMap.get(`${u}|${m}`) ?? 0;
@@ -63,7 +63,7 @@ export function UserModelHeatmap({ aggregations, topNUsers = 15 }: Props) {
                   return (
                     <td
                       key={m}
-                      title={`${u} · ${m}: ${formatUsd(v)}`}
+                      title={`${m}: ${formatUsd(v)}`}
                       className="rounded-md transition-transform hover:scale-110"
                       style={{
                         background: intensityColor(t),

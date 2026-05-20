@@ -92,10 +92,7 @@ export function TopDrainersPodium({ aggregations }: Props) {
                 >
                   <Icon className={`w-7 h-7 ${s.medalText}`} strokeWidth={2.5} />
                 </div>
-                <div
-                  className="text-sm font-medium text-white/90 text-center truncate w-full px-1"
-                  title={user.username}
-                >
+                <div className="uname text-sm font-medium text-white/90 text-center truncate w-full px-1">
                   {user.username}
                 </div>
                 <div className="text-xs text-white/50 mt-0.5 tabular-nums">

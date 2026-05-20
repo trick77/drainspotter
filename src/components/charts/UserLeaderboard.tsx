@@ -16,6 +16,29 @@ import type { Aggregations, PoolState } from "@/lib/types";
 
 type Props = { aggregations: Aggregations; pool: PoolState; topN?: number };
 
+type TickProps = {
+  x?: number;
+  y?: number;
+  payload?: { value: string | number };
+  textAnchor?: "end" | "start" | "middle" | "inherit";
+};
+
+function UnameYAxisTick({ x = 0, y = 0, payload, textAnchor = "end" }: TickProps) {
+  return (
+    <text
+      x={x}
+      y={y}
+      dy={4}
+      textAnchor={textAnchor}
+      fill="rgba(255,255,255,0.7)"
+      fontSize={12}
+      className="uname"
+    >
+      {payload?.value}
+    </text>
+  );
+}
+
 export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
   const data = aggregations.perUser.slice(0, topN).map((u) => ({
     user: u.username,
@@ -43,14 +66,18 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               tickLine={false}
               axisLine={false}
               width={150}
-              tick={{ fill: "rgba(255,255,255,0.7)", fontSize: 12 }}
+              tick={<UnameYAxisTick />}
             />
             <Tooltip
               cursor={{ fill: "rgba(255,255,255,0.04)" }}
               content={
                 <ChartTooltip
                   valueFormatter={(v) => formatUsd(v)}
-                  labelFormatter={(l) => `User: ${l}`}
+                  labelFormatter={(l) => (
+                    <>
+                      User: <span className="uname">{l}</span>
+                    </>
+                  )}
                 />
               }
             />
