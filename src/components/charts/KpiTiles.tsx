@@ -119,7 +119,7 @@ export function KpiTiles({ aggregations, pool, forecast }: Props) {
         }
         delta={
           forecast.pierceDate
-            ? `Pool runs dry on ${forecast.pierceDate.slice(8, 10)}.${forecast.pierceDate.slice(5, 7)}.${forecast.pierceDate.slice(0, 4)}`
+            ? `Pool runs dry on ${forecast.pierceDate.slice(8, 10)}.${forecast.pierceDate.slice(5, 7)}.`
             : "Pool lasts until end of month"
         }
         intent={forecast.pierceDate ? "danger" : "neutral"}
