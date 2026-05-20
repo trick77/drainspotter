@@ -19,7 +19,9 @@ import { UserModelHeatmap } from "@/components/charts/UserModelHeatmap";
 import { ModelMixTreemap } from "@/components/charts/ModelMixTreemap";
 import { CostPerRequest } from "@/components/charts/CostPerRequest";
 import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
+import { ModelMixTrend } from "@/components/charts/ModelMixTrend";
 import { PoolBurnDown } from "@/components/charts/PoolBurnDown";
+import { QuotaBreachTimeline } from "@/components/charts/QuotaBreachTimeline";
 import { UserDetailTable } from "@/components/charts/UserDetailTable";
 
 export default function App() {
@@ -156,18 +158,20 @@ export default function App() {
             data-agg-rows={aggregations.rowCount}
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
-            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
             <ParetoChart aggregations={aggregations} />
             <UserLeaderboard aggregations={aggregations} pool={pool} />
+            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
             <PoolGauge pool={pool} forecast={fc} />
             <DailyBurnRate
               aggregations={aggregations}
               groupBy={settings.burnRateGroupBy}
               onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
             />
+            <ModelMixTrend aggregations={aggregations} />
             <UserModelHeatmap aggregations={aggregations} />
             <ModelMixTreemap aggregations={aggregations} />
             <CostPerRequest aggregations={aggregations} />
+            <QuotaBreachTimeline aggregations={aggregations} />
             <UserDetailTable aggregations={aggregations} pool={pool} />
           </div>
         </>

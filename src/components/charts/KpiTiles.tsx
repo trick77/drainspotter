@@ -68,8 +68,13 @@ function Tile({
 export function KpiTiles({ aggregations, pool, forecast }: Props) {
   const spark = aggregations.perDay.map((d) => ({ date: d.date, v: d.totalAic }));
   const overshoot = forecast.forecastVsPool > 0;
+  const showIdle = pool.purchasedSlots > pool.activeSeats;
+  const wasted = pool.idleSeats * pool.costPerSeat;
+  const colClass = showIdle
+    ? "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 col-span-full"
+    : "grid grid-cols-2 md:grid-cols-5 gap-3 col-span-full";
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 col-span-full">
+    <div className={colClass}>
       <Tile
         label="Spent"
         value={formatUsd(pool.spent)}
@@ -95,9 +100,16 @@ export function KpiTiles({ aggregations, pool, forecast }: Props) {
       <Tile
         label="Active seats"
         value={String(pool.activeSeats)}
-        delta={`${pool.idleSeats} idle of ${pool.purchasedSlots}`}
-        intent={pool.idleSeats > pool.purchasedSlots / 2 ? "warn" : "neutral"}
+        delta={`${pool.activeSeats} of ${pool.purchasedSlots} purchased`}
       />
+      {showIdle && (
+        <Tile
+          label="Idle seats"
+          value={String(pool.idleSeats)}
+          delta={`${formatUsd(wasted)} /month wasted`}
+          intent={pool.idleSeats > pool.purchasedSlots / 2 ? "warn" : "neutral"}
+        />
+      )}
       <Tile
         label="Pierce date"
         value={forecast.pierceDate ? forecast.pierceDate.slice(-2) + "." : "—"}

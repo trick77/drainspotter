@@ -49,11 +49,11 @@ describe("forecast", () => {
         daysElapsed: 5,
         lastDayInData: "2026-04-05",
         perDay: [
-          { date: "2026-04-01", totalAic: 10, byUser: {}, byModel: {} },
-          { date: "2026-04-02", totalAic: 10, byUser: {}, byModel: {} },
-          { date: "2026-04-03", totalAic: 10, byUser: {}, byModel: {} },
-          { date: "2026-04-04", totalAic: 10, byUser: {}, byModel: {} },
-          { date: "2026-04-05", totalAic: 10, byUser: {}, byModel: {} },
+          { date: "2026-04-01", totalAic: 10, byUser: {}, byModel: {}, breachedUsers: [] },
+          { date: "2026-04-02", totalAic: 10, byUser: {}, byModel: {}, breachedUsers: [] },
+          { date: "2026-04-03", totalAic: 10, byUser: {}, byModel: {}, breachedUsers: [] },
+          { date: "2026-04-04", totalAic: 10, byUser: {}, byModel: {}, breachedUsers: [] },
+          { date: "2026-04-05", totalAic: 10, byUser: {}, byModel: {}, breachedUsers: [] },
         ],
       }),
       "linear",
@@ -71,6 +71,7 @@ describe("forecast", () => {
       totalAic: i < 3 ? 100 : 20,
       byUser: {},
       byModel: {},
+      breachedUsers: [],
     }));
     const f = forecast(
       agg({
@@ -100,6 +101,7 @@ describe("forecast", () => {
           totalAic: 10,
           byUser: {},
           byModel: {},
+          breachedUsers: [],
         })),
       }),
       "linear",
