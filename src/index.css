@@ -1,8 +1,6 @@
+@import "tailwindcss";
 @import "./print.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../tailwind.config.ts";
 
 :root {
   color-scheme: dark;
@@ -35,6 +33,7 @@ body {
     color: rgba(255, 255, 255, 0.6);
   }
   .kpi-value {
-    @apply text-3xl font-semibold tabular bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent;
+    @apply text-3xl font-semibold bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent;
+    font-variant-numeric: tabular-nums;
   }
 }
