@@ -30,6 +30,7 @@ export type Settings = {
   burnRateGroupBy: "user" | "model";
   forecastGrowth: ForecastGrowth;
   tableSort: { column: string; direction: "asc" | "desc" };
+  obfuscateUsernames: boolean;
 };
 
 export type PerUser = {

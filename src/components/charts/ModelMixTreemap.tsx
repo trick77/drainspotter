@@ -62,7 +62,7 @@ export function ModelMixTreemap({ aggregations }: Props) {
     <ChartFrame title="Model Mix" subtitle="$ share per model">
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
-          <Treemap data={data} dataKey="size" stroke="rgba(0,0,0,0.2)" content={<CustomContent />} isAnimationActive>
+          <Treemap data={data} dataKey="size" stroke="rgba(0,0,0,0.2)" content={<CustomContent />} isAnimationActive={false}>
             <Tooltip content={<ChartTooltip />} />
           </Treemap>
         </ResponsiveContainer>

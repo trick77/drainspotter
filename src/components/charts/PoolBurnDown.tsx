@@ -64,7 +64,7 @@ export function PoolBurnDown({ aggregations, pool, forecast }: Props) {
               stroke="#fb923c"
               fill="url(#drainArea)"
               strokeWidth={2.5}
-              isAnimationActive
+              isAnimationActive={false}
               name="Spent (Ist)"
             />
             <Line
@@ -74,7 +74,7 @@ export function PoolBurnDown({ aggregations, pool, forecast }: Props) {
               strokeWidth={2}
               strokeDasharray="6 4"
               dot={false}
-              isAnimationActive
+              isAnimationActive={false}
               name="Forecast"
             />
             <ReferenceLine

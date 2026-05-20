@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { parseUsageCsv, ParseError } from "@/lib/csv-parser";
 import { aggregate } from "@/lib/aggregator";
 import { computePool } from "@/lib/pool-math";
@@ -69,8 +69,84 @@ export default function App() {
     [aggregations, pool, settings.forecastMode]
   );
 
+  const onSlotsChange = useCallback(
+    (v: number) => setSettings((s) => ({ ...s, purchasedSlots: v })),
+    []
+  );
+  const onCostChange = useCallback(
+    (v: number) => setSettings((s) => ({ ...s, costPerSeat: v })),
+    []
+  );
+  const onOverageChange = useCallback(
+    (v: number) => setSettings((s) => ({ ...s, overageBudget: v })),
+    []
+  );
+  const onGrowthChange = useCallback(
+    (g: Settings["forecastGrowth"]) =>
+      setSettings((s) => ({ ...s, forecastGrowth: g })),
+    []
+  );
+  const onGroupByChange = useCallback(
+    (g: Settings["burnRateGroupBy"]) =>
+      setSettings((s) => ({ ...s, burnRateGroupBy: g })),
+    []
+  );
+
+  const chartsGrid = useMemo(() => {
+    if (!aggregations || !pool || !fc) return null;
+    return (
+      <div
+        id="charts-grid"
+        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+        data-fc-mode={fc.mode}
+        data-pool-percent={pool.percentUsed.toFixed(2)}
+        data-agg-rows={aggregations.rowCount}
+      >
+        <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
+        <ParetoChart aggregations={aggregations} />
+        <TopDrainersPodium aggregations={aggregations} />
+        <PoolGauge pool={pool} forecast={fc} />
+        <div className="col-span-full grid grid-cols-1 xl:grid-cols-3 gap-4">
+          <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
+          <SpendForecast6Mo
+            aggregations={aggregations}
+            forecast={fc}
+            pool={pool}
+            growth={settings.forecastGrowth}
+            onGrowthChange={onGrowthChange}
+          />
+        </div>
+        <UserLeaderboard aggregations={aggregations} pool={pool} />
+        <ModelMixTreemap aggregations={aggregations} />
+        <div className="col-span-full grid grid-cols-1 xl:grid-cols-2 gap-4">
+          <DailyBurnRate
+            aggregations={aggregations}
+            groupBy={settings.burnRateGroupBy}
+            onGroupByChange={onGroupByChange}
+          />
+          <ModelMixTrend aggregations={aggregations} />
+        </div>
+        <UserModelHeatmap aggregations={aggregations} />
+        <CostPerRequest aggregations={aggregations} />
+        <UserDetailTable aggregations={aggregations} pool={pool} />
+      </div>
+    );
+  }, [
+    aggregations,
+    pool,
+    fc,
+    settings.forecastGrowth,
+    settings.burnRateGroupBy,
+    onGrowthChange,
+    onGroupByChange,
+  ]);
+
   return (
-    <div className="min-h-screen px-6 py-6 md:px-10 md:py-8 max-w-[1600px] mx-auto">
+    <div
+      className={`min-h-screen px-6 py-6 md:px-10 md:py-8 max-w-[1600px] mx-auto${
+        settings.obfuscateUsernames ? " obfuscate-usernames" : ""
+      }`}
+    >
       <ChartDefs />
       <header className="flex items-center justify-between mb-8 print:mb-4">
         <div className="flex items-center gap-4">
@@ -172,14 +248,32 @@ export default function App() {
         <>
           <div className="mb-6">
             <InfoBanner>
-              Analyzing {aggregations.monthStart.slice(0, 7)} ·{" "}
-              {aggregations.daysElapsed} of {aggregations.daysInMonth} days
-              (through{" "}
-              {new Date(aggregations.lastDayInData + "T00:00:00Z").toLocaleDateString(
-                "en-US",
-                { month: "long", day: "numeric", timeZone: "UTC" }
-              )}
-              )
+              <div className="flex items-center justify-between gap-3 w-full">
+                <div>
+                  Analyzing {aggregations.monthStart.slice(0, 7)} ·{" "}
+                  {aggregations.daysElapsed} of {aggregations.daysInMonth} days
+                  (through{" "}
+                  {new Date(aggregations.lastDayInData + "T00:00:00Z").toLocaleDateString(
+                    "en-US",
+                    { month: "long", day: "numeric", timeZone: "UTC" }
+                  )}
+                  )
+                </div>
+                <label className="print:hidden flex items-center gap-2 cursor-pointer select-none text-white/80 whitespace-nowrap">
+                  <input
+                    type="checkbox"
+                    checked={settings.obfuscateUsernames}
+                    onChange={(e) =>
+                      setSettings((s) => ({
+                        ...s,
+                        obfuscateUsernames: e.target.checked,
+                      }))
+                    }
+                    className="accent-drain-400 w-4 h-4 cursor-pointer"
+                  />
+                  Anonymize
+                </label>
+              </div>
             </InfoBanner>
           </div>
           {aggregations.spannedMonths.length > 1 && (
@@ -197,53 +291,13 @@ export default function App() {
               slots={settings.purchasedSlots}
               costPerSeat={settings.costPerSeat}
               overageBudget={settings.overageBudget}
-              onSlotsChange={(v) =>
-                setSettings({ ...settings, purchasedSlots: v })
-              }
-              onCostChange={(v) =>
-                setSettings({ ...settings, costPerSeat: v })
-              }
-              onOverageChange={(v) =>
-                setSettings({ ...settings, overageBudget: v })
-              }
+              onSlotsChange={onSlotsChange}
+              onCostChange={onCostChange}
+              onOverageChange={onOverageChange}
             />
           </div>
 
-          <div
-            id="charts-grid"
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
-            data-fc-mode={fc.mode}
-            data-pool-percent={pool.percentUsed.toFixed(2)}
-            data-agg-rows={aggregations.rowCount}
-          >
-            <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
-            <ParetoChart aggregations={aggregations} />
-            <TopDrainersPodium aggregations={aggregations} />
-            <PoolGauge pool={pool} forecast={fc} />
-            <div className="col-span-full grid grid-cols-1 xl:grid-cols-3 gap-4">
-              <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
-              <SpendForecast6Mo
-                aggregations={aggregations}
-                forecast={fc}
-                pool={pool}
-                growth={settings.forecastGrowth}
-                onGrowthChange={(g) => setSettings({ ...settings, forecastGrowth: g })}
-              />
-            </div>
-            <UserLeaderboard aggregations={aggregations} pool={pool} />
-            <ModelMixTreemap aggregations={aggregations} />
-            <div className="col-span-full grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <DailyBurnRate
-                aggregations={aggregations}
-                groupBy={settings.burnRateGroupBy}
-                onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
-              />
-              <ModelMixTrend aggregations={aggregations} />
-            </div>
-            <UserModelHeatmap aggregations={aggregations} />
-            <CostPerRequest aggregations={aggregations} />
-            <UserDetailTable aggregations={aggregations} pool={pool} />
-          </div>
+          {chartsGrid}
         </>
       )}
     </div>

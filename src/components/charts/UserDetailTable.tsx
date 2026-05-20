@@ -127,7 +127,9 @@ export function UserDetailTable({ aggregations, pool }: Props) {
               return (
                 <tr key={u.username} className="border-t border-white/5 hover:bg-white/5">
                   <td className="px-3 py-2 tabular text-white/50">{i + 1}</td>
-                  <td className="px-3 py-2 tabular">{u.username}</td>
+                  <td className="px-3 py-2 tabular">
+                    <span className="uname">{u.username}</span>
+                  </td>
                   <td
                     className={clsx(
                       "px-3 py-2 tabular",

@@ -72,7 +72,7 @@ export function ParetoChart({ aggregations }: Props) {
                 />
               }
             />
-            <Bar yAxisId="left" dataKey="spent" fill="url(#drainBar)" name="Spent" radius={[3, 3, 0, 0]} />
+            <Bar yAxisId="left" dataKey="spent" fill="url(#drainBar)" name="Spent" radius={[3, 3, 0, 0]} isAnimationActive={false} />
             <Line
               yAxisId="right"
               type="monotone"
@@ -81,7 +81,7 @@ export function ParetoChart({ aggregations }: Props) {
               strokeWidth={2}
               dot={false}
               name="Cumulative %"
-              isAnimationActive
+              isAnimationActive={false}
             />
             <ReferenceLine yAxisId="right" y={0.8} stroke="#22d3ee" strokeDasharray="2 4" />
           </ComposedChart>

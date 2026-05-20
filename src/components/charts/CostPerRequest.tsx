@@ -55,7 +55,7 @@ export function CostPerRequest({ aggregations }: Props) {
                 />
               }
             />
-            <Bar dataKey="cpr" radius={[0, 6, 6, 0]} name="$/Request">
+            <Bar dataKey="cpr" radius={[0, 6, 6, 0]} name="$/Request" isAnimationActive={false}>
               {data.map((d, i) => (
                 <Cell key={i} fill={modelColor(d.model)} />
               ))}

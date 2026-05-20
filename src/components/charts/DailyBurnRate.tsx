@@ -95,9 +95,20 @@ export function DailyBurnRate({
             />
             <Tooltip
               cursor={{ stroke: "rgba(255,255,255,0.2)", strokeDasharray: "4 4" }}
-              content={<ChartTooltip valueFormatter={formatUsd} />}
+              content={
+                <ChartTooltip
+                  valueFormatter={formatUsd}
+                  nameClassName={groupBy === "user" ? "uname" : undefined}
+                />
+              }
             />
-            <Legend content={<ChartLegend />} />
+            <Legend
+              content={
+                <ChartLegend
+                  valueClassName={groupBy === "user" ? "uname" : undefined}
+                />
+              }
+            />
             {[...topKeys, "other"].map((k) => (
               <Area
                 key={k}
@@ -107,7 +118,7 @@ export function DailyBurnRate({
                 stroke={colorFor(k)}
                 fill={colorFor(k)}
                 fillOpacity={0.6}
-                isAnimationActive
+                isAnimationActive={false}
               />
             ))}
           </AreaChart>

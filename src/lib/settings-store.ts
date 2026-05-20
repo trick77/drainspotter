@@ -10,6 +10,7 @@ export const DEFAULT_SETTINGS: Settings = {
   burnRateGroupBy: "user",
   forecastGrowth: "moderate",
   tableSort: { column: "totalAic", direction: "desc" },
+  obfuscateUsernames: false,
 };
 
 export function loadSettings(): Settings {

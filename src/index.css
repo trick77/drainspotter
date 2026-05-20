@@ -22,6 +22,12 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.obfuscate-usernames .uname,
+.obfuscate-usernames text.uname {
+  filter: blur(5px);
+  user-select: none;
+}
+
 @layer components {
   .glass-card {
     @apply rounded-2xl border backdrop-blur-md shadow-glass;
