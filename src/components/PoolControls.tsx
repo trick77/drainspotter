@@ -14,7 +14,17 @@ export function PoolControls({ slots, costPerSeat, onSlotsChange, onCostChange }
       <div className="flex-1">
         <div className="flex items-baseline justify-between mb-2">
           <div className="kpi-label">Purchased Slots</div>
-          <div className="text-2xl font-semibold tabular text-white">{slots}</div>
+          <div
+            className="text-2xl font-semibold tabular text-white cursor-pointer select-none"
+            onClick={() => onSlotsChange(Math.min(500, slots + 1))}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              onSlotsChange(Math.max(1, slots - 1));
+            }}
+            title="Click to add a seat, right-click to remove one"
+          >
+            {slots}
+          </div>
         </div>
         <input
           type="range"
