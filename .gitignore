@@ -8,6 +8,7 @@ dist/
 coverage/
 .vite/
 .superpowers/
+.playwright-mcp/
 scripts/source-real.csv
 *.tsbuildinfo
 vite.config.js
