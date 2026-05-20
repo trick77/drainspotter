@@ -66,6 +66,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               tickLine={false}
               axisLine={false}
               width={150}
+              interval={0}
               tick={<UnameYAxisTick />}
             />
             <Tooltip
