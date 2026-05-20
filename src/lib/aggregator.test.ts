@@ -122,23 +122,4 @@ describe("aggregate", () => {
     ]);
     expect(a.perUser[0].exceedsQuota).toBe(true);
   });
-
-  it("collects breachedUsers per day", () => {
-    const a = aggregate([
-      row({ date: "2026-04-01", username: "alice", exceedsQuota: false }),
-      row({ date: "2026-04-01", username: "bob", exceedsQuota: true }),
-      row({ date: "2026-04-01", username: "bob", exceedsQuota: true }),
-      row({ date: "2026-04-02", username: "carol", exceedsQuota: true }),
-      row({ date: "2026-04-02", username: "alice", exceedsQuota: false }),
-    ]);
-    expect(a.perDay[0].breachedUsers).toEqual(["bob"]);
-    expect(a.perDay[1].breachedUsers).toEqual(["carol"]);
-  });
-
-  it("leaves breachedUsers empty when no breaches occur", () => {
-    const a = aggregate([
-      row({ date: "2026-04-01", username: "alice", exceedsQuota: false }),
-    ]);
-    expect(a.perDay[0].breachedUsers).toEqual([]);
-  });
 });

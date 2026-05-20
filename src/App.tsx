@@ -21,7 +21,6 @@ import { CostPerRequest } from "@/components/charts/CostPerRequest";
 import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
 import { ModelMixTrend } from "@/components/charts/ModelMixTrend";
 import { PoolBurnDown } from "@/components/charts/PoolBurnDown";
-import { QuotaBreachTimeline } from "@/components/charts/QuotaBreachTimeline";
 import { UserDetailTable } from "@/components/charts/UserDetailTable";
 
 export default function App() {
@@ -171,7 +170,6 @@ export default function App() {
             <UserModelHeatmap aggregations={aggregations} />
             <ModelMixTreemap aggregations={aggregations} />
             <CostPerRequest aggregations={aggregations} />
-            <QuotaBreachTimeline aggregations={aggregations} />
             <UserDetailTable aggregations={aggregations} pool={pool} />
           </div>
         </>

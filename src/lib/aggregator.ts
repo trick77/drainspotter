@@ -60,7 +60,6 @@ export function aggregate(rows: UsageRow[]): Aggregations {
     { totalAic: number; totalRequests: number }
   >();
   const perDayMap = new Map<string, PerDay>();
-  const perDayBreachSet = new Map<string, Set<string>>();
   const userModelMap = new Map<string, UserModelCell>();
 
   let totalAic = 0;
@@ -108,20 +107,12 @@ export function aggregate(rows: UsageRow[]): Aggregations {
 
     let pd = perDayMap.get(r.date);
     if (!pd) {
-      pd = { date: r.date, totalAic: 0, byUser: {}, byModel: {}, breachedUsers: [] };
+      pd = { date: r.date, totalAic: 0, byUser: {}, byModel: {} };
       perDayMap.set(r.date, pd);
     }
     pd.totalAic += r.aicGrossAmount;
     pd.byUser[r.username] = (pd.byUser[r.username] ?? 0) + r.aicGrossAmount;
     pd.byModel[r.model] = (pd.byModel[r.model] ?? 0) + r.aicGrossAmount;
-    if (r.exceedsQuota) {
-      let breachSet = perDayBreachSet.get(r.date);
-      if (!breachSet) {
-        breachSet = new Set<string>();
-        perDayBreachSet.set(r.date, breachSet);
-      }
-      breachSet.add(r.username);
-    }
 
     const cellKey = `${r.username}|${r.model}`;
     const cell = userModelMap.get(cellKey);
@@ -154,10 +145,6 @@ export function aggregate(rows: UsageRow[]): Aggregations {
   const perDay = [...perDayMap.values()].sort((a, b) =>
     a.date.localeCompare(b.date)
   );
-  perDay.forEach((d) => {
-    const set = perDayBreachSet.get(d.date);
-    d.breachedUsers = set ? [...set].sort() : [];
-  });
   const userModel = [...userModelMap.values()];
 
   return {

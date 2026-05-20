@@ -49,7 +49,6 @@ export type PerDay = {
   totalAic: number;
   byUser: Record<string, number>;
   byModel: Record<string, number>;
-  breachedUsers: string[];
 };
 
 export type UserModelCell = {
