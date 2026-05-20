@@ -84,7 +84,11 @@ export function KpiTiles({ aggregations, pool, forecast }: Props) {
       <Tile
         label="Pool total"
         value={formatUsd(pool.totalPool)}
-        delta={`${pool.purchasedSlots} slots × $${pool.costPerSeat}`}
+        delta={
+          pool.overageBudget > 0
+            ? `${pool.purchasedSlots} × $${pool.costPerSeat} + $${pool.overageBudget} budget`
+            : `${pool.purchasedSlots} slots × $${pool.costPerSeat}`
+        }
       />
       <Tile
         label="Forecast EoM"
