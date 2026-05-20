@@ -78,13 +78,15 @@ export function SpendForecast6Mo({
       ? REGULAR_COST_PER_SEAT
       : userCost;
     const seatFees = pool.purchasedSlots * seatCost;
+    const budget = pool.overageBudget;
     const spend = validAnchor ? anchor * Math.pow(1 + rate, n) : 0;
-    const overage = Math.max(0, spend - seatFees);
+    const overage = Math.max(0, spend - seatFees - budget);
     return {
       month: shortMonthLabel(d),
       seatFees,
+      budget,
       overage,
-      total: seatFees + overage,
+      total: seatFees + budget + overage,
       spend,
       isAnchor: n === 0,
       isPromo: promo,
@@ -157,6 +159,47 @@ export function SpendForecast6Mo({
                 barSize={42}
                 shape={(props: any) => {
                   const { x, y, width, height, payload, fill, fillOpacity } = props;
+                  const r = payload.overage > 0 || payload.budget > 0 ? 0 : 6;
+                  const path =
+                    r > 0
+                      ? `M${x},${y + height} L${x},${y + r} Q${x},${y} ${x + r},${y} L${x + width - r},${y} Q${x + width},${y} ${x + width},${y + r} L${x + width},${y + height} Z`
+                      : `M${x},${y} L${x + width},${y} L${x + width},${y + height} L${x},${y + height} Z`;
+                  return <path d={path} fill={fill} fillOpacity={fillOpacity} />;
+                }}
+              >
+                <LabelList
+                  dataKey="total"
+                  position="top"
+                  content={(props: any) => {
+                    const { x, y, width, index } = props;
+                    if (data[index]?.overage > 0 || data[index]?.budget > 0) return null;
+                    const v = data[index]?.total;
+                    if (typeof v !== "number") return null;
+                    return (
+                      <text
+                        x={x + width / 2}
+                        y={y - 6}
+                        textAnchor="middle"
+                        fill="rgba(255,255,255,0.7)"
+                        fontSize={10}
+                        style={{ fontVariantNumeric: "tabular-nums" }}
+                      >
+                        {formatUsdCompact(v)}
+                      </text>
+                    );
+                  }}
+                />
+              </Bar>
+              <Bar
+                dataKey="budget"
+                name="Overage Budget"
+                stackId="cost"
+                fill="#a78bfa"
+                fillOpacity={0.55}
+                barSize={42}
+                shape={(props: any) => {
+                  const { x, y, width, height, payload, fill, fillOpacity } = props;
+                  if (height <= 0) return <g />;
                   const r = payload.overage > 0 ? 0 : 6;
                   const path =
                     r > 0
@@ -171,6 +214,7 @@ export function SpendForecast6Mo({
                   content={(props: any) => {
                     const { x, y, width, index } = props;
                     if (data[index]?.overage > 0) return null;
+                    if (!(data[index]?.budget > 0)) return null;
                     const v = data[index]?.total;
                     if (typeof v !== "number") return null;
                     return (
@@ -223,11 +267,18 @@ export function SpendForecast6Mo({
             <div className="flex items-center gap-1.5">
               <span
                 className="w-2.5 h-2.5 rounded-sm"
+                style={{ background: "#a78bfa", opacity: 0.55 }}
+              />
+              <span>Overage budget (planned)</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span
+                className="w-2.5 h-2.5 rounded-sm"
                 style={{
                   background: "linear-gradient(to bottom, #fb923c, #f43f5e)",
                 }}
               />
-              <span>AI overage (spend above seat budget)</span>
+              <span>AI overage (spend above seat + budget)</span>
             </div>
           </div>
           </>

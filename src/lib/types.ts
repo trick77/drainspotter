@@ -25,6 +25,7 @@ export type ForecastGrowth = "conservative" | "moderate" | "aggressive";
 export type Settings = {
   purchasedSlots: number;
   costPerSeat: number;
+  overageBudget: number;
   forecastMode: ForecastMode;
   burnRateGroupBy: "user" | "model";
   forecastGrowth: ForecastGrowth;
@@ -81,7 +82,8 @@ export type Aggregations = {
 export type PoolState = {
   purchasedSlots: number;
   costPerSeat: number;
-  totalPool: number;              // purchasedSlots * costPerSeat
+  overageBudget: number;
+  totalPool: number;              // purchasedSlots * costPerSeat + overageBudget
   spent: number;
   remaining: number;
   percentUsed: number;            // 0..1
