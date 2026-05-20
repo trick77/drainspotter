@@ -67,7 +67,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               <LabelList
                 dataKey="spent"
                 position="right"
-                formatter={(v: number) => formatUsd(v)}
+                formatter={(v: unknown) => (typeof v === "number" ? formatUsd(v) : "")}
                 style={{ fill: "rgba(255,255,255,0.85)", fontSize: 11, fontVariantNumeric: "tabular-nums" }}
               />
             </Bar>
