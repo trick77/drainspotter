@@ -54,11 +54,12 @@ export default function App() {
         ? computePool({
             purchasedSlots: settings.purchasedSlots,
             costPerSeat: settings.costPerSeat,
+            overageBudget: settings.overageBudget,
             spent: aggregations.totalAic,
             activeUsernames: aggregations.activeUsernames,
           })
         : null,
-    [aggregations, settings.purchasedSlots, settings.costPerSeat]
+    [aggregations, settings.purchasedSlots, settings.costPerSeat, settings.overageBudget]
   );
   const fc = useMemo(
     () =>
@@ -195,11 +196,15 @@ export default function App() {
             <PoolControls
               slots={settings.purchasedSlots}
               costPerSeat={settings.costPerSeat}
+              overageBudget={settings.overageBudget}
               onSlotsChange={(v) =>
                 setSettings({ ...settings, purchasedSlots: v })
               }
               onCostChange={(v) =>
                 setSettings({ ...settings, costPerSeat: v })
+              }
+              onOverageChange={(v) =>
+                setSettings({ ...settings, overageBudget: v })
               }
             />
           </div>
