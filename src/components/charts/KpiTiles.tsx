@@ -112,10 +112,14 @@ export function KpiTiles({ aggregations, pool, forecast }: Props) {
       )}
       <Tile
         label="Pierce date"
-        value={forecast.pierceDate ? forecast.pierceDate.slice(-2) + "." : "—"}
+        value={
+          forecast.pierceDate
+            ? `${Number(forecast.pierceDate.slice(8, 10))}.${Number(forecast.pierceDate.slice(5, 7))}.`
+            : "—"
+        }
         delta={
           forecast.pierceDate
-            ? `Pool runs dry on ${forecast.pierceDate.slice(-5).replace("-", ".")}`
+            ? `Pool runs dry on ${forecast.pierceDate.slice(8, 10)}.${forecast.pierceDate.slice(5, 7)}.${forecast.pierceDate.slice(0, 4)}`
             : "Pool lasts until end of month"
         }
         intent={forecast.pierceDate ? "danger" : "neutral"}
