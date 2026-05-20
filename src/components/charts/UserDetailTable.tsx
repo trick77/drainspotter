@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Search } from "lucide-react";
 import { ChartFrame } from "@/components/ChartFrame";
 import { formatUsd } from "@/lib/format";
 import type { Aggregations, PoolState } from "@/lib/types";
@@ -33,10 +34,15 @@ export function UserDetailTable({ aggregations, pool }: Props) {
     key: "totalAic",
     dir: "desc",
   });
-  const rows = [...aggregations.perUser].map((u) => ({
+  const [query, setQuery] = useState("");
+  const allRows = [...aggregations.perUser].map((u) => ({
     ...u,
     share: pool.totalPool > 0 ? u.totalAic / pool.totalPool : 0,
   }));
+  const trimmedQuery = query.trim().toLowerCase();
+  const rows = trimmedQuery
+    ? allRows.filter((u) => u.username.toLowerCase().includes(trimmedQuery))
+    : allRows;
   rows.sort((a, b) => {
     const av = a[sort.key as keyof typeof a];
     const bv = b[sort.key as keyof typeof b];
@@ -67,11 +73,32 @@ export function UserDetailTable({ aggregations, pool }: Props) {
   );
 
   return (
-    <ChartFrame title="User Details" subtitle={`${rows.length} active users`} className="col-span-full">
+    <ChartFrame
+      title="User Details"
+      subtitle={
+        trimmedQuery
+          ? `${rows.length} of ${allRows.length} active users`
+          : `${allRows.length} active users`
+      }
+      className="col-span-full"
+    >
+      <div className="mb-3 relative max-w-xs">
+        <Search className="w-4 h-4 text-white/40 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search username…"
+          className="w-full bg-white/5 border border-white/10 rounded-md pl-8 pr-3 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
+        />
+      </div>
       <div className="overflow-x-auto max-h-[480px]">
         <table className="w-full text-sm">
           <thead className="sticky top-0 bg-ink-900/80 backdrop-blur-sm">
             <tr>
+              <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-white/50">
+                #
+              </th>
               <Th k="username">User</Th>
               <Th k="totalAic">Spent</Th>
               <Th k="totalRequests">Requests</Th>
@@ -83,11 +110,19 @@ export function UserDetailTable({ aggregations, pool }: Props) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((u) => {
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-3 py-6 text-center text-white/40">
+                  No users match "{query}"
+                </td>
+              </tr>
+            )}
+            {rows.map((u, i) => {
               const sparkData = u.perDay.slice(-7).map((d) => d.aic);
               const over = u.totalAic > pool.fairSharePerSeat;
               return (
                 <tr key={u.username} className="border-t border-white/5 hover:bg-white/5">
+                  <td className="px-3 py-2 tabular text-white/50">{i + 1}</td>
                   <td className="px-3 py-2 tabular">{u.username}</td>
                   <td
                     className={clsx(
