@@ -18,9 +18,9 @@ const ROOT = resolve(__dirname, "..");
 const TOP_DRAINERS = [
   "steve-gastown",
   "chief-token-officer",
-  "lord-of-the-pool",
-  "count-contextula",
   "sir-burns-a-lot",
+  "count-contextula",
+  "lord-of-the-pool",
   "duke-of-drain",
   "promptzilla",
   "token-shredder",

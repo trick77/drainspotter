@@ -10,6 +10,7 @@ import { DemoDataButton } from "@/components/DemoDataButton";
 import { PoolControls } from "@/components/PoolControls";
 import { ExportPdfButton } from "@/components/ExportPdfButton";
 import { WarningBanner } from "@/components/WarningBanner";
+import { InfoBanner } from "@/components/InfoBanner";
 import { ChartDefs } from "@/components/ChartDefs";
 import { KpiTiles } from "@/components/charts/KpiTiles";
 import { PoolGauge } from "@/components/charts/PoolGauge";
@@ -22,6 +23,8 @@ import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
 import { ModelMixTrend } from "@/components/charts/ModelMixTrend";
 import { PoolBurnDown } from "@/components/charts/PoolBurnDown";
 import { UserDetailTable } from "@/components/charts/UserDetailTable";
+import { TopDrainersPodium } from "@/components/charts/TopDrainersPodium";
+import { SpendForecast6Mo } from "@/components/charts/SpendForecast6Mo";
 
 export default function App() {
   const [rows, setRows] = useState<UsageRow[] | null>(null);
@@ -105,6 +108,46 @@ export default function App() {
       {!rows && (
         <div className="flex flex-col gap-4">
           <DropZone onFile={handleFile} hero />
+          <details className="glass-card p-4 text-sm text-white/70 max-w-2xl mx-auto w-full">
+            <summary className="cursor-pointer font-medium text-white/80 select-none">
+              How to get the usage report
+            </summary>
+            <ol className="list-decimal list-inside mt-3 space-y-1.5 text-white/60">
+              <li>
+                Sign in to GitHub and open your organization's page (
+                <span className="text-white/70">github.com/organizations/&lt;your-org&gt;</span>
+                ).
+              </li>
+              <li>
+                Click <span className="text-white/80">Settings</span> in the top
+                navigation.
+              </li>
+              <li>
+                In the left sidebar, open{" "}
+                <span className="text-white/80">Billing and licensing</span> →{" "}
+                <span className="text-white/80">Usage</span>.
+              </li>
+              <li>
+                Click <span className="text-white/80">Get usage report</span>.
+              </li>
+              <li>
+                Choose <span className="text-white/80">Detailed report</span>{" "}
+                and set the date range to the current month (or any month you
+                want to analyze).
+              </li>
+              <li>
+                Submit the request. GitHub will email you a link to the CSV
+                once it's ready (usually within a few minutes).
+              </li>
+              <li>
+                Download the CSV and drop it above. Only the{" "}
+                <span className="font-mono text-white/70">
+                  premiumRequestUsageReport
+                </span>{" "}
+                file is needed.
+              </li>
+            </ol>
+          </details>
           <div className="flex flex-col items-center gap-3">
             <p className="text-xs text-white/40 text-center max-w-md">
               Your CSV is parsed in your browser. Nothing is uploaded, logged,
@@ -126,6 +169,18 @@ export default function App() {
 
       {rows && aggregations && pool && fc && (
         <>
+          <div className="mb-6">
+            <InfoBanner>
+              Analyzing {aggregations.monthStart.slice(0, 7)} ·{" "}
+              {aggregations.daysElapsed} of {aggregations.daysInMonth} days
+              (through{" "}
+              {new Date(aggregations.lastDayInData + "T00:00:00Z").toLocaleDateString(
+                "en-US",
+                { month: "long", day: "numeric", timeZone: "UTC" }
+              )}
+              )
+            </InfoBanner>
+          </div>
           {aggregations.spannedMonths.length > 1 && (
             <div className="mb-6">
               <WarningBanner>
@@ -158,17 +213,29 @@ export default function App() {
           >
             <KpiTiles aggregations={aggregations} pool={pool} forecast={fc} />
             <ParetoChart aggregations={aggregations} />
-            <UserLeaderboard aggregations={aggregations} pool={pool} />
-            <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
+            <TopDrainersPodium aggregations={aggregations} />
             <PoolGauge pool={pool} forecast={fc} />
-            <DailyBurnRate
-              aggregations={aggregations}
-              groupBy={settings.burnRateGroupBy}
-              onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
-            />
-            <ModelMixTrend aggregations={aggregations} />
-            <UserModelHeatmap aggregations={aggregations} />
+            <div className="col-span-full grid grid-cols-1 xl:grid-cols-3 gap-4">
+              <PoolBurnDown aggregations={aggregations} pool={pool} forecast={fc} />
+              <SpendForecast6Mo
+                aggregations={aggregations}
+                forecast={fc}
+                pool={pool}
+                growth={settings.forecastGrowth}
+                onGrowthChange={(g) => setSettings({ ...settings, forecastGrowth: g })}
+              />
+            </div>
+            <UserLeaderboard aggregations={aggregations} pool={pool} />
             <ModelMixTreemap aggregations={aggregations} />
+            <div className="col-span-full grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <DailyBurnRate
+                aggregations={aggregations}
+                groupBy={settings.burnRateGroupBy}
+                onGroupByChange={(g) => setSettings({ ...settings, burnRateGroupBy: g })}
+              />
+              <ModelMixTrend aggregations={aggregations} />
+            </div>
+            <UserModelHeatmap aggregations={aggregations} />
             <CostPerRequest aggregations={aggregations} />
             <UserDetailTable aggregations={aggregations} pool={pool} />
           </div>

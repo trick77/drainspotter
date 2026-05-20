@@ -35,7 +35,7 @@ export function PoolBurnDown({ aggregations, pool, forecast }: Props) {
           ? `Pool runs dry on ${formatDate(forecast.pierceDate)}`
           : "Pool lasts until end of month"
       }
-      className="col-span-full"
+      className="col-span-1 xl:col-span-2"
     >
       <div className="h-[340px]">
         <ResponsiveContainer width="100%" height="100%">

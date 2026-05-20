@@ -1,8 +1,24 @@
 import { Treemap, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
-import { modelColor } from "@/lib/model-colors";
 import type { Aggregations } from "@/lib/types";
+
+// Top spender flagged in orange (matches "AI overage" color from neighboring card);
+// remaining models in descending cyan shades.
+const TOP_COLOR = "#fb923c"; // orange-400
+const CYAN_SHADES = [
+  "#22d3ee", // cyan-400
+  "#06b6d4", // cyan-500
+  "#0891b2", // cyan-600
+  "#0e7490", // cyan-700
+  "#155e75", // cyan-800
+  "#164e63", // cyan-900
+];
+
+function modelColorAt(index: number): string {
+  if (index === 0) return TOP_COLOR;
+  return CYAN_SHADES[(index - 1) % CYAN_SHADES.length];
+}
 
 type Props = { aggregations: Aggregations };
 
@@ -37,10 +53,10 @@ function CustomContent(props: any) {
 }
 
 export function ModelMixTreemap({ aggregations }: Props) {
-  const data: TreemapNode[] = aggregations.perModel.map((m) => ({
+  const data: TreemapNode[] = aggregations.perModel.map((m, i) => ({
     name: m.model,
     size: m.totalAic,
-    color: modelColor(m.model),
+    color: modelColorAt(i),
   }));
   return (
     <ChartFrame title="Model Mix" subtitle="$ share per model">
