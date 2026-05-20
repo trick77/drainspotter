@@ -87,7 +87,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               strokeDasharray="4 4"
               label={{ value: "Fair-Share", fill: "#22d3ee", fontSize: 10, position: "top" }}
             />
-            <Bar dataKey="spent" radius={[0, 6, 6, 0]} fill="url(#drainBarH)" name="Spent">
+            <Bar dataKey="spent" radius={[0, 6, 6, 0]} fill="url(#drainBarH)" name="Spent" isAnimationActive={false}>
               {data.map((_, i) => (
                 <Cell key={i} fill="url(#drainBarH)" />
               ))}

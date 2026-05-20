@@ -157,6 +157,7 @@ export function SpendForecast6Mo({
                 fill="#22d3ee"
                 fillOpacity={0.55}
                 barSize={42}
+                isAnimationActive={false}
                 shape={(props: any) => {
                   const { x, y, width, height, payload, fill, fillOpacity } = props;
                   const r = payload.overage > 0 || payload.budget > 0 ? 0 : 6;
@@ -197,6 +198,7 @@ export function SpendForecast6Mo({
                 fill="#a78bfa"
                 fillOpacity={0.55}
                 barSize={42}
+                isAnimationActive={false}
                 shape={(props: any) => {
                   const { x, y, width, height, payload, fill, fillOpacity } = props;
                   if (height <= 0) return <g />;
@@ -239,6 +241,7 @@ export function SpendForecast6Mo({
                 fill="url(#drainBar)"
                 radius={[6, 6, 0, 0]}
                 barSize={42}
+                isAnimationActive={false}
               >
                 <LabelList
                   dataKey="total"

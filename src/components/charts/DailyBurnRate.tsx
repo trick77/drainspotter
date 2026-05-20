@@ -118,7 +118,7 @@ export function DailyBurnRate({
                 stroke={colorFor(k)}
                 fill={colorFor(k)}
                 fillOpacity={0.6}
-                isAnimationActive
+                isAnimationActive={false}
               />
             ))}
           </AreaChart>

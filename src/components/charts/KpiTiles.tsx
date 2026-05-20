@@ -36,7 +36,7 @@ function Tile({
                 strokeWidth={1.5}
                 fill={sparkColor}
                 fillOpacity={0.15}
-                isAnimationActive
+                isAnimationActive={false}
               />
             </AreaChart>
           </ResponsiveContainer>

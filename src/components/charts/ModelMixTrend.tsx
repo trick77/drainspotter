@@ -77,7 +77,7 @@ export function ModelMixTrend({ aggregations, topN = 6 }: Props) {
                 stroke={colorFor(k)}
                 fill={colorFor(k)}
                 fillOpacity={0.6}
-                isAnimationActive
+                isAnimationActive={false}
               />
             ))}
           </AreaChart>
