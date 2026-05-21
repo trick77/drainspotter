@@ -36,7 +36,7 @@ the demo dataset.
 ## Demo data
 
 The demo CSV is real usage data from April 1–15, with usernames anonymized.
-The top drainer is `steve-gastown`. The user who hasn't used Copilot in three
+The top drainer is `gastown-steve`. The user who hasn't used Copilot in three
 weeks despite holding a seat is `copilot-bünzli`. There's also a
 `chief-token-officer`, a `lord-of-the-pool`, an `auto-complete-amish` and a
 `still-on-stackoverflow`. You'll figure out which ones to care about.
