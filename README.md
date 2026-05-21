@@ -33,22 +33,6 @@ npm run dev
 Drop your CSV into the upload zone, or click "Load sample data" to play with
 the demo dataset.
 
-## Demo data
-
-The demo CSV is real usage data from April 1–15, with usernames anonymized.
-The top drainer is `steve-gastown`. The user who hasn't used Copilot in three
-weeks despite holding a seat is `copilot-bünzli`. There's also a
-`chief-token-officer`, a `lord-of-the-pool`, an `auto-complete-amish` and a
-`still-on-stackoverflow`. You'll figure out which ones to care about.
-
-Regenerate it after editing the alias lists:
-
-```sh
-node scripts/generate-demo-csv.mjs
-```
-
-(You need `scripts/source-real.csv` for that — gitignored, not shipped.)
-
 ## Container build
 
 ```sh

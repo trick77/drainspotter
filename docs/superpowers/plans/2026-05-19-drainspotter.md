@@ -1740,7 +1740,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const TOP_DRAINERS = [
-  "steve-gastown",            // explicitly #1
+  "gastown-steve",            // explicitly #1
   "chief-token-officer",
   "lord-of-the-pool",
   "count-contextula",
@@ -1929,8 +1929,8 @@ Expected: writes `public/demo.csv`, prints mapping summary to stdout.
 
 - [ ] **Step 5: Sanity-check the output**
 
-Run: `head -5 public/demo.csv && echo "---" && grep -c steve-gastown public/demo.csv`
-Expected: header line + 4 data rows shown; `steve-gastown` appears in ≥1 row.
+Run: `head -5 public/demo.csv && echo "---" && grep -c gastown-steve public/demo.csv`
+Expected: header line + 4 data rows shown; `gastown-steve` appears in ≥1 row.
 
 - [ ] **Step 6: Commit**
 
@@ -2996,7 +2996,7 @@ import { UserLeaderboard } from "@/components/charts/UserLeaderboard";
 - [ ] **Step 3: Visual verify**
 
 Run: `npm run dev`, load demo.
-Expected: horizontal bar chart with `steve-gastown` at top, gradient bars, Fair-Share line visible (cyan dashed) at $19 mark.
+Expected: horizontal bar chart with `gastown-steve` at top, gradient bars, Fair-Share line visible (cyan dashed) at $19 mark.
 
 - [ ] **Step 4: Commit**
 
@@ -4103,7 +4103,7 @@ Expected: Empty state with hero DropZone and "Load demo data" button.
 - [ ] **Step 2: Demo data flow**
 
 Click "Load demo data".
-Expected: All 10 charts render. `steve-gastown` appears as Top-1 in UserLeaderboard. `copilot-bünzli` appears at the bottom of UserDetailTable when sorted ascending by Spent.
+Expected: All 10 charts render. `gastown-steve` appears as Top-1 in UserLeaderboard. `copilot-bünzli` appears at the bottom of UserDetailTable when sorted ascending by Spent.
 
 - [ ] **Step 3: Controls**
 
@@ -4184,7 +4184,7 @@ gh pr create --title "feat: drainspotter MVP — 10-chart Copilot usage cockpit"
 - Settings persistence via LocalStorage
 - PDF export via window.print() + print-stylesheet
 - nginx-container + compose.yaml with Traefik labels
-- Demo CSV with funny aliases (steve-gastown #1 drainer, copilot-bünzli #1 lurker)
+- Demo CSV with funny aliases (gastown-steve #1 drainer, copilot-bünzli #1 lurker)
 
 ## Test plan
 - [x] `npm test` (Vitest)

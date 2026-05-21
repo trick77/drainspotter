@@ -34,7 +34,7 @@ No data leaves the browser.
 - Date range toggle (`7d / 14d / all`) — filters only the time-series charts (DailyBurnRate, PoolBurnDown). Pool calculation and forecast remain monthly
 - **Persistent settings via LocalStorage:** slot count, cost per seat, forecast mode, DailyBurnRate grouping (user/model), range toggle, sort order of UserDetailTable. Key: `drainspotter:settings:v1`. The CSV data itself is **not** persisted (privacy + size).
 - **Bundled demo CSV:** A "Load sample data" button in the empty state loads a prepared CSV from `/public/demo.csv`. Content: a real sample provided by the user (15 days, April 1–15 2026, all models, ~120 users), with usernames anonymized as follows:
-    - **Top drainers** (highest total `aic_gross_amount`): receive aristocratic-villain glutton names. **`steve-gastown` is explicitly the #1 top drainer** (mapped to the real user with the highest total spend). Ranks 2–10 in descending spend order: `chief-token-officer`, `lord-of-the-pool`, `count-contextula`, `sir-burns-a-lot`, `duke-of-drain`, `promptzilla`, `token-shredder`, `quota-muncher`, `voldetoken`
+    - **Top drainers** (highest total `aic_gross_amount`): receive aristocratic-villain glutton names. **`gastown-steve` is explicitly the #1 top drainer** (mapped to the real user with the highest total spend). Ranks 2–10 in descending spend order: `chief-token-officer`, `lord-of-the-pool`, `count-contextula`, `sir-burns-a-lot`, `duke-of-drain`, `promptzilla`, `token-shredder`, `quota-muncher`, `voldetoken`
     - **Bottom-10 non-drainers** (lowest total `aic_gross_amount` > 0): receive lurker/license-zombie names, in ascending spend order (i.e., `copilot-bünzli` = absolute lowest): `copilot-bünzli`, `lizenz-leiche`, `enablement-target`, `quota-coward`, `token-tumbleweed`, `untapped-potential`, `ghost-coder`, `inference-abstainer`, `auto-complete-amish`, `still-on-stackoverflow`
     - **Middle-band users** (everyone in between, ~100 in the demo sample): assigned deterministically from a **pool of ~50 neutral dev-funny names** (mildly humorous, dev-culture themed, less extreme than top/bottom). Examples: `coffee-driven-dev`, `regex-rita`, `merge-conflict-mary`, `bug-magnet`, `rubber-ducker`, `semicolon-skipper`, `cache-miss-carl`, `null-pointer-nina`, `stale-branch-bob`, `force-push-fred`, and similar. When the pool is exhausted, additional users are mapped to `dev-NN` (two digits, zero-padded).
     - Each original username gets **exactly one** alias consistently across all rows (same person → same alias → correct heatmap/leaderboard data)
@@ -299,7 +299,7 @@ Recharts is fully themed — no default styling remains visible:
 6. `npm test` — all Vitest tests green
 7. `npm run build` — `dist/` contains static assets
 8. `docker compose up --build` — app reachable via Traefik at configured domain
-9. Manual check: `steve-gastown` should appear as top drainer (in the sample CSV: $29.24 AIC)
+9. Manual check: `gastown-steve` should appear as top drainer (in the sample CSV: $29.24 AIC)
 
 ## Open Questions for Implementation Phase
 
