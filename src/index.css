@@ -3,7 +3,48 @@
 @config "../tailwind.config.ts";
 
 :root {
-  color-scheme: dark;
+  /* Surfaces */
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-surface-hover: #f1f5f9;
+
+  /* Text */
+  --color-fg: #0f172a;
+  --color-fg-strong: #020617;
+  --color-fg-muted: #475569;
+  --color-fg-subtle: #64748b;
+  --color-fg-faint: #94a3b8;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  /* Accents */
+  --color-drain-400: #f97316;
+  --color-drain-500: #ea580c;
+  --color-drain-600: #e11d48;
+  --color-cool-400: #3b82f6;
+  --color-cool-500: #2563eb;
+  --color-cool-600: #1d4ed8;
+  --color-pool: #0e7490;
+  --color-overshoot: #dc2626;
+
+  /* Chart neutrals */
+  --color-axis: #64748b;
+  --color-grid: #e2e8f0;
+  --color-tooltip-bg: #ffffff;
+  --color-tooltip-border: #e2e8f0;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* Backgrounds */
+  --bg-app: #ffffff;
+  --bg-drain-gradient: linear-gradient(90deg, #f97316 0%, #e11d48 100%);
+  --bg-cool-gradient: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%);
+
+  color-scheme: light;
 }
 
 html, body, #root {
@@ -12,9 +53,9 @@ html, body, #root {
 
 body {
   font-family: "Inter", system-ui, sans-serif;
-  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+  background: var(--bg-app);
   background-attachment: fixed;
-  color: rgb(241 245 249);
+  color: var(--color-fg);
   font-feature-settings: "cv11", "ss01";
 }
 
@@ -33,16 +74,17 @@ body {
 
 @layer components {
   .glass-card {
-    @apply rounded-2xl border backdrop-blur-md shadow-glass;
-    border-color: rgba(255, 255, 255, 0.08);
-    background-color: rgba(255, 255, 255, 0.04);
+    @apply rounded-2xl border shadow-glass;
+    border-color: var(--color-border);
+    background-color: var(--color-surface);
   }
   .kpi-label {
     @apply text-xs uppercase tracking-wider;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--color-fg-subtle);
   }
   .kpi-value {
-    @apply text-3xl font-semibold bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent;
+    @apply text-3xl font-semibold;
+    color: var(--color-fg);
     font-variant-numeric: tabular-nums;
   }
 }

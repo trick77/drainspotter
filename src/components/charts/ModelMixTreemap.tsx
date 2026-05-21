@@ -5,14 +5,14 @@ import type { Aggregations } from "@/lib/types";
 
 // Top spender flagged in orange (matches "AI overage" color from neighboring card);
 // remaining models in descending cyan shades.
-const TOP_COLOR = "#fb923c"; // orange-400
+const TOP_COLOR = "#f97316"; // orange-500
 const CYAN_SHADES = [
-  "#22d3ee", // cyan-400
-  "#06b6d4", // cyan-500
   "#0891b2", // cyan-600
   "#0e7490", // cyan-700
   "#155e75", // cyan-800
   "#164e63", // cyan-900
+  "#0c4a6e", // sky-900
+  "#1e3a8a", // blue-900
 ];
 
 function modelColorAt(index: number): string {

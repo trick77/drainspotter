@@ -4,7 +4,7 @@ type Props = { payload?: Payload[]; valueClassName?: string };
 
 export function ChartLegend({ payload = [], valueClassName }: Props) {
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center pt-2 text-xs text-white/70">
+    <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center pt-2 text-xs text-fg-muted">
       {payload.map((p, i) => (
         <div key={i} className="flex items-center gap-1.5">
           <span

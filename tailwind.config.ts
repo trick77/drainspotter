@@ -9,41 +9,50 @@ export default {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
-        ink: {
-          950: "#0a0a14",
-          900: "#0f172a",
-          800: "#1e1b4b",
+        bg: "var(--color-bg)",
+        surface: {
+          DEFAULT: "var(--color-surface)",
+          muted: "var(--color-surface-muted)",
+          hover: "var(--color-surface-hover)",
+        },
+        fg: {
+          DEFAULT: "var(--color-fg)",
+          strong: "var(--color-fg-strong)",
+          muted: "var(--color-fg-muted)",
+          subtle: "var(--color-fg-subtle)",
+          faint: "var(--color-fg-faint)",
+        },
+        border: {
+          DEFAULT: "var(--color-border)",
+          strong: "var(--color-border-strong)",
         },
         drain: {
-          400: "#fb923c",
-          500: "#f97316",
-          600: "#f43f5e",
+          400: "var(--color-drain-400)",
+          500: "var(--color-drain-500)",
+          600: "var(--color-drain-600)",
         },
         cool: {
-          400: "#818cf8",
-          500: "#6366f1",
-          600: "#4f46e5",
+          400: "var(--color-cool-400)",
+          500: "var(--color-cool-500)",
+          600: "var(--color-cool-600)",
         },
         pool: {
-          DEFAULT: "#22d3ee",
+          DEFAULT: "var(--color-pool)",
         },
         overshoot: {
-          DEFAULT: "#ef4444",
+          DEFAULT: "var(--color-overshoot)",
         },
       },
       backgroundImage: {
-        "app-gradient":
-          "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)",
-        "drain-gradient":
-          "linear-gradient(90deg, #fb923c 0%, #f43f5e 100%)",
-        "cool-gradient":
-          "linear-gradient(90deg, #818cf8 0%, #6366f1 100%)",
+        "app-gradient": "var(--bg-app)",
+        "drain-gradient": "var(--bg-drain-gradient)",
+        "cool-gradient": "var(--bg-cool-gradient)",
       },
       borderRadius: {
         "2xl": "1rem",
       },
       boxShadow: {
-        glass: "0 8px 32px rgba(0,0,0,0.25)",
+        glass: "var(--shadow-card)",
       },
     },
   },

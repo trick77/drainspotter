@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
+import { chartColors } from "@/lib/chart-theme";
 import { modelColor } from "@/lib/model-colors";
 import { formatUsd } from "@/lib/format";
 import type { Aggregations } from "@/lib/types";
@@ -35,7 +36,7 @@ export function CostPerRequest({ aggregations }: Props) {
               type="number"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={(v) => formatUsd(v)}
             />
             <YAxis
@@ -44,10 +45,10 @@ export function CostPerRequest({ aggregations }: Props) {
               tickLine={false}
               axisLine={false}
               width={140}
-              tick={{ fill: "rgba(255,255,255,0.7)", fontSize: 11 }}
+              tick={{ fill: chartColors.fgMuted, fontSize: 11 }}
             />
             <Tooltip
-              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+              cursor={{ fill: chartColors.cursorFill }}
               content={
                 <ChartTooltip
                   valueFormatter={(v) => formatUsd(v)}

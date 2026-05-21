@@ -10,7 +10,7 @@ type Props = { aggregations: Aggregations; pool: PoolState };
 type SortKey = "username" | "totalAic" | "totalRequests" | "share";
 
 function MiniSpark({ data, color }: { data: number[]; color: string }) {
-  if (data.length === 0) return <span className="text-white/30">—</span>;
+  if (data.length === 0) return <span className="text-fg-faint">—</span>;
   const max = Math.max(...data);
   const w = 80;
   const h = 24;
@@ -68,7 +68,7 @@ export function UserDetailTable({ aggregations, pool }: Props) {
 
   const Th = ({ k, children }: { k: SortKey; children: React.ReactNode }) => (
     <th
-      className="text-left px-3 py-2 text-xs uppercase tracking-wider text-white/50 cursor-pointer select-none"
+      className="text-left px-3 py-2 text-xs uppercase tracking-wider text-fg-subtle cursor-pointer select-none"
       onClick={() => toggleSort(k)}
     >
       {children}
@@ -87,36 +87,36 @@ export function UserDetailTable({ aggregations, pool }: Props) {
       className="col-span-full"
     >
       <div className="mb-3 relative max-w-xs">
-        <Search className="w-4 h-4 text-white/40 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search className="w-4 h-4 text-fg-faint absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search username…"
-          className="w-full bg-white/5 border border-white/10 rounded-md pl-8 pr-3 py-1.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
+          className="w-full bg-surface-muted border border-border rounded-md pl-8 pr-3 py-1.5 text-sm text-fg placeholder:text-fg-faint focus:outline-none focus:border-border-strong"
         />
       </div>
       <div ref={scrollerRef} className="overflow-auto h-[480px] [overflow-anchor:none]">
         <table className="w-full text-sm">
-          <thead className="sticky top-0 bg-ink-900/80 backdrop-blur-sm">
+          <thead className="sticky top-0 bg-surface">
             <tr>
-              <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-white/50">
+              <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-fg-subtle">
                 #
               </th>
               <Th k="username">User</Th>
               <Th k="totalAic">Spent</Th>
               <Th k="totalRequests">Requests</Th>
               <Th k="share">% Pool</Th>
-              <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-white/50">
+              <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-fg-subtle">
                 7-Day Trend
               </th>
-              <th className="px-3 py-2 text-xs uppercase tracking-wider text-white/50">Quota</th>
+              <th className="px-3 py-2 text-xs uppercase tracking-wider text-fg-subtle">Quota</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-3 py-6 text-center text-white/40">
+                <td colSpan={7} className="px-3 py-6 text-center text-fg-faint">
                   No users match "{query}"
                 </td>
               </tr>
@@ -125,31 +125,31 @@ export function UserDetailTable({ aggregations, pool }: Props) {
               const sparkData = u.perDay.slice(-7).map((d) => d.aic);
               const over = u.totalAic > pool.fairSharePerSeat;
               return (
-                <tr key={u.username} className="border-t border-white/5 hover:bg-white/5">
-                  <td className="px-3 py-2 tabular text-white/50">{i + 1}</td>
+                <tr key={u.username} className="border-t border-border hover:bg-surface-hover">
+                  <td className="px-3 py-2 tabular text-fg-subtle">{i + 1}</td>
                   <td className="px-3 py-2 tabular">
                     <span className="uname">{u.username}</span>
                   </td>
                   <td
                     className={clsx(
                       "px-3 py-2 tabular",
-                      over ? "text-drain-400" : "text-white"
+                      over ? "text-drain-400" : "text-fg"
                     )}
                   >
                     {formatUsd(u.totalAic)}
                   </td>
-                  <td className="px-3 py-2 tabular text-white/70">
+                  <td className="px-3 py-2 tabular text-fg-muted">
                     {u.totalRequests.toFixed(1)}
                   </td>
-                  <td className="px-3 py-2 tabular text-white/70">
+                  <td className="px-3 py-2 tabular text-fg-muted">
                     {(u.share * 100).toFixed(2)}%
                   </td>
                   <td className="px-3 py-2">
-                    <MiniSpark data={sparkData} color={over ? "#fb923c" : "#818cf8"} />
+                    <MiniSpark data={sparkData} color={over ? "var(--color-drain-400)" : "var(--color-cool-500)"} />
                   </td>
                   <td className="px-3 py-2 text-center">
                     {u.exceedsQuota && (
-                      <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-rose-500/20 text-rose-300 animate-pulse">
+                      <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-overshoot/10 text-overshoot animate-pulse">
                         exceeded
                       </span>
                     )}

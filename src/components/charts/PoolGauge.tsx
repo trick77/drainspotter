@@ -1,4 +1,5 @@
 import { ChartFrame } from "@/components/ChartFrame";
+import { chartColors } from "@/lib/chart-theme";
 import { formatUsd, formatPercent } from "@/lib/format";
 import type { PoolState, Forecast } from "@/lib/types";
 
@@ -22,7 +23,7 @@ export function PoolGauge({ pool, forecast }: Props) {
           <path
             d={`M ${stroke / 2} ${size / 2} A ${radius} ${radius} 0 0 1 ${size - stroke / 2} ${size / 2}`}
             fill="none"
-            stroke="rgba(255,255,255,0.08)"
+            stroke={chartColors.grid}
             strokeWidth={stroke}
             strokeLinecap="round"
           />
@@ -39,7 +40,7 @@ export function PoolGauge({ pool, forecast }: Props) {
             <path
               d={`M ${stroke / 2} ${size / 2} A ${radius} ${radius} 0 0 1 ${size - stroke / 2} ${size / 2}`}
               fill="none"
-              stroke={overshoot ? "#ef4444" : "#818cf8"}
+              stroke={overshoot ? chartColors.overshoot : chartColors.cool500}
               strokeWidth={stroke * 0.4}
               strokeLinecap="round"
               strokeDasharray={`${forecastLen} ${circumference}`}
@@ -48,19 +49,19 @@ export function PoolGauge({ pool, forecast }: Props) {
           )}
         </svg>
         {overshoot && (
-          <div className="absolute top-0 right-0 px-2 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+          <div className="absolute top-0 right-0 px-2 py-1 rounded-full bg-overshoot/10 border border-overshoot/30 text-overshoot text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-overshoot animate-pulse" />
             over budget
           </div>
         )}
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 pointer-events-none">
-          <div className="text-4xl font-semibold tabular bg-gradient-to-r from-white to-cool-400 bg-clip-text text-transparent">
+          <div className="text-4xl font-semibold tabular text-fg">
             {formatUsd(pool.spent)}
           </div>
-          <div className="text-xs text-white/50 mt-1">
+          <div className="text-xs text-fg-subtle mt-1">
             of {formatUsd(pool.totalPool)}
           </div>
-          <div className="text-xs text-white/40 mt-1">
+          <div className="text-xs text-fg-faint mt-1">
             Forecast: {formatUsd(forecast.forecastEoM)}
           </div>
         </div>

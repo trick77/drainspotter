@@ -11,6 +11,7 @@ import {
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
 import { ChartLegend } from "@/components/ChartLegend";
+import { chartColors } from "@/lib/chart-theme";
 import { modelColor } from "@/lib/model-colors";
 import { formatPercent, formatDate } from "@/lib/format";
 import type { Aggregations } from "@/lib/types";
@@ -37,7 +38,7 @@ export function ModelMixTrend({ aggregations, topN = 6 }: Props) {
     return row;
   });
   const colorFor = (k: string) =>
-    k === "other" ? "rgba(255,255,255,0.2)" : modelColor(k);
+    k === "other" ? chartColors.fgFaint : modelColor(k);
 
   return (
     <ChartFrame
@@ -48,23 +49,23 @@ export function ModelMixTrend({ aggregations, topN = 6 }: Props) {
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
-            <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" vertical={false} />
+            <CartesianGrid stroke={chartColors.grid} strokeDasharray="4 4" vertical={false} />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={(v) => formatDate(v).slice(0, 5)}
             />
             <YAxis
               domain={[0, 1]}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={(v) => formatPercent(v as number)}
             />
             <Tooltip
-              cursor={{ stroke: "rgba(255,255,255,0.2)", strokeDasharray: "4 4" }}
+              cursor={{ stroke: chartColors.cursorStroke, strokeDasharray: "4 4" }}
               content={<ChartTooltip valueFormatter={(v) => formatPercent(v)} />}
             />
             <Legend content={<ChartLegend />} />

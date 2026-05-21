@@ -35,7 +35,7 @@ export function ChartTooltip({
       : String(label ?? "");
   return (
     <div className="glass-card px-3 py-2 text-xs min-w-[160px]">
-      {labelNode && <div className="text-white/60 mb-1">{labelNode}</div>}
+      {labelNode && <div className="text-fg-subtle mb-1">{labelNode}</div>}
       <div className="flex flex-col gap-1">
         {payload.map((p, i) => (
           <div key={i} className="flex items-center gap-2">
@@ -43,10 +43,10 @@ export function ChartTooltip({
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ background: p.color }}
             />
-            <span className={`text-white/80 flex-1 truncate${nameClassName ? ` ${nameClassName}` : ""}`}>
+            <span className={`text-fg-muted flex-1 truncate${nameClassName ? ` ${nameClassName}` : ""}`}>
               {p.name}
             </span>
-            <span className="tabular text-white font-medium">
+            <span className="tabular text-fg font-medium">
               {typeof p.value === "number" ? valueFormatter(p.value) : "—"}
             </span>
           </div>

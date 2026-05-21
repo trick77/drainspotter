@@ -1,4 +1,5 @@
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
+import { chartColors } from "@/lib/chart-theme";
 import { formatUsd, formatPercent } from "@/lib/format";
 import type { Aggregations, PoolState, Forecast } from "@/lib/types";
 
@@ -22,7 +23,11 @@ function Tile({
   intent?: "neutral" | "warn" | "danger";
 }) {
   const sparkColor =
-    intent === "danger" ? "#f43f5e" : intent === "warn" ? "#fb923c" : "#818cf8";
+    intent === "danger"
+      ? chartColors.drain600
+      : intent === "warn"
+      ? chartColors.drain400
+      : chartColors.cool500;
   return (
     <div className="glass-card p-4 relative overflow-hidden h-[140px] flex flex-col justify-between">
       {spark && spark.length > 1 && (
@@ -51,10 +56,10 @@ function Tile({
           <div
             className={
               intent === "danger"
-                ? "text-xs text-rose-400 mt-1"
+                ? "text-xs text-overshoot mt-1"
                 : intent === "warn"
-                ? "text-xs text-amber-400 mt-1"
-                : "text-xs text-white/50 mt-1"
+                ? "text-xs text-drain-400 mt-1"
+                : "text-xs text-fg-subtle mt-1"
             }
           >
             {delta}

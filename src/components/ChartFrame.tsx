@@ -15,7 +15,7 @@ export function ChartFrame({ title, subtitle, actions, children, className }: Pr
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="kpi-label">{title}</div>
-          {subtitle && <div className="text-sm text-white/50 mt-1">{subtitle}</div>}
+          {subtitle && <div className="text-sm text-fg-subtle mt-1">{subtitle}</div>}
         </div>
         {actions && <div className="flex gap-2">{actions}</div>}
       </div>

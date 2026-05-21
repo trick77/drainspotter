@@ -24,7 +24,7 @@ export function PoolControls({
         <div className="flex items-baseline justify-between mb-2">
           <div className="kpi-label">Purchased Slots</div>
           <div
-            className="text-2xl font-semibold tabular text-white cursor-pointer select-none"
+            className="text-2xl font-semibold tabular text-fg cursor-pointer select-none"
             onClick={() => onSlotsChange(Math.min(500, slots + 1))}
             onContextMenu={(e) => {
               e.preventDefault();
@@ -53,10 +53,10 @@ export function PoolControls({
           step={1}
           value={costPerSeat}
           onChange={(e) => onCostChange(parseFloat(e.target.value) || 0)}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-right tabular focus:outline-none focus:border-drain-400"
+          className="w-full bg-surface-muted border border-border rounded-lg px-3 py-2 text-right tabular focus:outline-none focus:border-drain-400"
           aria-label="Cost per Seat"
         />
-        <div className="text-xs text-white/40 mt-1">Promo Jun–Aug: $49</div>
+        <div className="text-xs text-fg-faint mt-1">Promo Jun–Aug: $49</div>
       </div>
       <div className="md:w-36">
         <div className="kpi-label mb-2">Overage Budget</div>
@@ -66,10 +66,10 @@ export function PoolControls({
           step={10}
           value={overageBudget}
           onChange={(e) => onOverageChange(Math.max(0, parseFloat(e.target.value) || 0))}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-right tabular focus:outline-none focus:border-drain-400"
+          className="w-full bg-surface-muted border border-border rounded-lg px-3 py-2 text-right tabular focus:outline-none focus:border-drain-400"
           aria-label="Monthly overage budget in USD"
         />
-        <div className="text-xs text-white/40 mt-1">USD per month</div>
+        <div className="text-xs text-fg-faint mt-1">USD per month</div>
       </div>
       <div className="md:w-48 text-right">
         <div className="kpi-label mb-2">Pool</div>

@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
+import { chartColors } from "@/lib/chart-theme";
 import { formatUsd, formatUsdCompact } from "@/lib/format";
 import type { Aggregations, PoolState } from "@/lib/types";
 
@@ -30,7 +31,7 @@ function UnameYAxisTick({ x = 0, y = 0, payload, textAnchor = "end" }: TickProps
       y={y}
       dy={4}
       textAnchor={textAnchor}
-      fill="rgba(255,255,255,0.7)"
+      fill={chartColors.fg}
       fontSize={12}
       className="uname"
     >
@@ -57,7 +58,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               type="number"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={formatUsdCompact}
             />
             <YAxis
@@ -70,7 +71,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
               tick={<UnameYAxisTick />}
             />
             <Tooltip
-              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+              cursor={{ fill: chartColors.cursorFill }}
               content={
                 <ChartTooltip
                   valueFormatter={(v) => formatUsd(v)}
@@ -84,9 +85,9 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
             />
             <ReferenceLine
               x={pool.fairSharePerSeat}
-              stroke="#22d3ee"
+              stroke={chartColors.pool}
               strokeDasharray="4 4"
-              label={{ value: "Fair-Share", fill: "#22d3ee", fontSize: 10, position: "top" }}
+              label={{ value: "Fair-Share", fill: chartColors.pool, fontSize: 10, position: "top" }}
             />
             <Bar dataKey="spent" radius={[0, 6, 6, 0]} fill="url(#drainBarH)" name="Spent" isAnimationActive={false}>
               {data.map((_, i) => (
@@ -96,7 +97,7 @@ export function UserLeaderboard({ aggregations, pool, topN = 12 }: Props) {
                 dataKey="spent"
                 position="right"
                 formatter={(v: unknown) => (typeof v === "number" ? formatUsd(v) : "")}
-                style={{ fill: "rgba(255,255,255,0.85)", fontSize: 11, fontVariantNumeric: "tabular-nums" }}
+                style={{ fill: chartColors.fg, fontSize: 11, fontVariantNumeric: "tabular-nums" }}
               />
             </Bar>
           </BarChart>

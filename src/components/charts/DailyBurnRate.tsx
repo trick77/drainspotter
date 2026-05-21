@@ -11,6 +11,7 @@ import {
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
 import { ChartLegend } from "@/components/ChartLegend";
+import { chartColors } from "@/lib/chart-theme";
 import { modelColor } from "@/lib/model-colors";
 import { formatUsd, formatUsdCompact, formatDate } from "@/lib/format";
 import type { Aggregations } from "@/lib/types";
@@ -50,7 +51,7 @@ export function DailyBurnRate({
   });
   const colorFor = (k: string) =>
     k === "other"
-      ? "rgba(255,255,255,0.2)"
+      ? chartColors.fgFaint
       : groupBy === "model"
       ? modelColor(k)
       : modelColor(`user:${k}`);
@@ -60,14 +61,14 @@ export function DailyBurnRate({
       subtitle={`Stacked, grouped by ${groupBy === "user" ? "user" : "model"}`}
       className="col-span-1"
       actions={
-        <div className="inline-flex rounded-lg bg-white/5 border border-white/10 p-1 print:hidden">
+        <div className="inline-flex rounded-lg bg-surface-muted border border-border p-1 print:hidden">
           {(["user", "model"] as const).map((g) => (
             <button
               key={g}
               onClick={() => onGroupByChange(g)}
               className={clsx(
                 "px-3 py-1 text-xs rounded-md transition-colors",
-                groupBy === g ? "bg-white/10 text-white" : "text-white/50 hover:text-white"
+                groupBy === g ? "bg-surface-hover text-fg" : "text-fg-subtle hover:text-fg"
               )}
             >
               {g === "user" ? "User" : "Model"}
@@ -79,22 +80,22 @@ export function DailyBurnRate({
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
-            <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" vertical={false} />
+            <CartesianGrid stroke={chartColors.grid} strokeDasharray="4 4" vertical={false} />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={(v) => formatDate(v).slice(0, 5)}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={formatUsdCompact}
             />
             <Tooltip
-              cursor={{ stroke: "rgba(255,255,255,0.2)", strokeDasharray: "4 4" }}
+              cursor={{ stroke: chartColors.cursorStroke, strokeDasharray: "4 4" }}
               content={
                 <ChartTooltip
                   valueFormatter={formatUsd}

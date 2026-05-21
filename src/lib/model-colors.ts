@@ -1,12 +1,12 @@
 const PALETTE = [
-  "#818cf8", // indigo-400
-  "#a78bfa", // violet-400
-  "#c4b5fd", // violet-300
-  "#22d3ee", // cyan-400
-  "#5eead4", // teal-300
-  "#7dd3fc", // sky-300
-  "#a5b4fc", // indigo-300
-  "#94a3b8", // slate-400
+  "#6366f1", // indigo-500
+  "#8b5cf6", // violet-500
+  "#0891b2", // cyan-600
+  "#0d9488", // teal-600
+  "#0284c7", // sky-600
+  "#7c3aed", // violet-600
+  "#4f46e5", // indigo-600
+  "#64748b", // slate-500
 ];
 
 function hash(s: string): number {

@@ -156,7 +156,7 @@ export default function App() {
               setRows(null);
               setError(null);
             }}
-            className="print:cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 rounded"
+            className="print:cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-border-strong rounded"
             aria-label="Reset to upload"
           >
             <img
@@ -165,7 +165,7 @@ export default function App() {
               className="h-10 md:h-14 w-auto"
             />
           </button>
-          <p className="hidden sm:block text-sm text-white/50 mt-3 md:mt-5">
+          <p className="hidden sm:block text-sm text-fg-subtle mt-3 md:mt-5">
             GitHub Copilot Usage Dashboard
           </p>
         </div>
@@ -185,30 +185,30 @@ export default function App() {
       {!rows && (
         <div className="flex flex-col gap-4">
           <DropZone onFile={handleFile} hero />
-          <details className="glass-card p-4 text-sm text-white/70 max-w-2xl mx-auto w-full">
-            <summary className="cursor-pointer font-medium text-white/80 select-none">
+          <details className="glass-card p-4 text-sm text-fg-muted max-w-2xl mx-auto w-full">
+            <summary className="cursor-pointer font-medium text-fg-muted select-none">
               How to get the usage report
             </summary>
-            <ol className="list-decimal list-inside mt-3 space-y-1.5 text-white/60">
+            <ol className="list-decimal list-inside mt-3 space-y-1.5 text-fg-subtle">
               <li>
                 Sign in to GitHub and open your organization's page (
-                <span className="text-white/70">github.com/organizations/&lt;your-org&gt;</span>
+                <span className="text-fg-muted">github.com/organizations/&lt;your-org&gt;</span>
                 ).
               </li>
               <li>
-                Click <span className="text-white/80">Settings</span> in the top
+                Click <span className="text-fg-muted">Settings</span> in the top
                 navigation.
               </li>
               <li>
                 In the left sidebar, open{" "}
-                <span className="text-white/80">Billing and licensing</span> →{" "}
-                <span className="text-white/80">Usage</span>.
+                <span className="text-fg-muted">Billing and licensing</span> →{" "}
+                <span className="text-fg-muted">Usage</span>.
               </li>
               <li>
-                Click <span className="text-white/80">Get usage report</span>.
+                Click <span className="text-fg-muted">Get usage report</span>.
               </li>
               <li>
-                Choose <span className="text-white/80">Detailed report</span>{" "}
+                Choose <span className="text-fg-muted">Detailed report</span>{" "}
                 and set the date range to the current month (or any month you
                 want to analyze).
               </li>
@@ -218,7 +218,7 @@ export default function App() {
               </li>
               <li>
                 Download the CSV and drop it above. Only the{" "}
-                <span className="font-mono text-white/70">
+                <span className="font-mono text-fg-muted">
                   premiumRequestUsageReport
                 </span>{" "}
                 file is needed.
@@ -226,14 +226,14 @@ export default function App() {
             </ol>
           </details>
           <div className="flex flex-col items-center gap-3">
-            <p className="text-xs text-white/40 text-center max-w-md">
+            <p className="text-xs text-fg-faint text-center max-w-md">
               Your CSV is parsed in your browser. Nothing is uploaded, logged,
               or retained — close the tab and it's gone. Source on{" "}
               <a
                 href="https://github.com/trick77/drainspotter"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white/60 underline decoration-white/20 hover:text-white/80"
+                className="text-fg-subtle underline decoration-border-strong hover:text-fg"
               >
                 GitHub
               </a>
@@ -259,7 +259,7 @@ export default function App() {
                   )}
                   )
                 </div>
-                <label className="print:hidden flex items-center gap-2 cursor-pointer select-none text-white/80 whitespace-nowrap">
+                <label className="print:hidden flex items-center gap-2 cursor-pointer select-none text-fg-muted whitespace-nowrap">
                   <input
                     type="checkbox"
                     checked={settings.obfuscateUsernames}

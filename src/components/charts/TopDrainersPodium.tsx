@@ -92,16 +92,16 @@ export function TopDrainersPodium({ aggregations }: Props) {
                 >
                   <Icon className={`w-7 h-7 ${s.medalText}`} strokeWidth={2.5} />
                 </div>
-                <div className="uname text-sm font-medium text-white/90 text-center truncate w-full px-1">
+                <div className="uname text-sm font-medium text-fg text-center truncate w-full px-1">
                   {user.username}
                 </div>
-                <div className="text-xs text-white/50 mt-0.5 tabular-nums">
+                <div className="text-xs text-fg-subtle mt-0.5 tabular-nums">
                   {formatUsd(user.totalAic)}
                 </div>
                 <div
-                  className={`mt-2 w-full ${s.height} rounded-t-lg bg-gradient-to-t ${s.barFrom} ${s.barTo} border-t border-x border-white/15 flex items-start justify-center pt-2`}
+                  className={`mt-2 w-full ${s.height} rounded-t-lg bg-gradient-to-t ${s.barFrom} ${s.barTo} border-t border-x border-border-strong flex items-start justify-center pt-2`}
                 >
-                  <span className="text-2xl md:text-3xl font-bold text-white/90 drop-shadow">
+                  <span className="text-2xl md:text-3xl font-bold text-fg-strong drop-shadow">
                     {rank}
                   </span>
                 </div>

@@ -11,6 +11,7 @@ import {
 import { clsx } from "clsx";
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
+import { chartColors } from "@/lib/chart-theme";
 import { formatUsd, formatUsdCompact } from "@/lib/format";
 import type {
   Aggregations,
@@ -100,7 +101,7 @@ export function SpendForecast6Mo({
       subtitle={validAnchor ? undefined : "Not enough data yet to forecast"}
       className="col-span-1"
       actions={
-        <div className="inline-flex rounded-lg bg-white/5 border border-white/10 p-1 print:hidden">
+        <div className="inline-flex rounded-lg bg-surface-muted border border-border p-1 print:hidden">
           {(Object.keys(GROWTH) as ForecastGrowth[]).map((g) => (
             <button
               key={g}
@@ -108,8 +109,8 @@ export function SpendForecast6Mo({
               className={clsx(
                 "px-3 py-1 text-xs rounded-md transition-colors",
                 growth === g
-                  ? "bg-white/10 text-white"
-                  : "text-white/50 hover:text-white"
+                  ? "bg-surface-hover text-fg"
+                  : "text-fg-subtle hover:text-fg"
               )}
             >
               {GROWTH[g].label}
@@ -125,7 +126,7 @@ export function SpendForecast6Mo({
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} margin={{ top: 16, right: 16, left: 0, bottom: 4 }}>
               <CartesianGrid
-                stroke="rgba(255,255,255,0.08)"
+                stroke={chartColors.grid}
                 strokeDasharray="4 4"
                 vertical={false}
               />
@@ -133,16 +134,16 @@ export function SpendForecast6Mo({
                 dataKey="month"
                 tickLine={false}
                 axisLine={false}
-                tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+                tick={{ fill: chartColors.axis, fontSize: 11 }}
               />
               <YAxis
                 tickLine={false}
                 axisLine={false}
-                tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+                tick={{ fill: chartColors.axis, fontSize: 11 }}
                 tickFormatter={formatUsdCompact}
               />
               <Tooltip
-                cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                cursor={{ fill: chartColors.cursorFill }}
                 content={
                   <ChartTooltip
                     valueFormatter={formatUsd}
@@ -154,7 +155,7 @@ export function SpendForecast6Mo({
                 dataKey="seatFees"
                 name="Seat Fees"
                 stackId="cost"
-                fill="#22d3ee"
+                fill={chartColors.pool}
                 fillOpacity={0.55}
                 barSize={42}
                 isAnimationActive={false}
@@ -181,7 +182,7 @@ export function SpendForecast6Mo({
                         x={x + width / 2}
                         y={y - 6}
                         textAnchor="middle"
-                        fill="rgba(255,255,255,0.7)"
+                        fill={chartColors.fgMuted}
                         fontSize={10}
                         style={{ fontVariantNumeric: "tabular-nums" }}
                       >
@@ -195,7 +196,7 @@ export function SpendForecast6Mo({
                 dataKey="budget"
                 name="Overage Budget"
                 stackId="cost"
-                fill="#a78bfa"
+                fill={chartColors.budget}
                 fillOpacity={0.55}
                 barSize={42}
                 isAnimationActive={false}
@@ -224,7 +225,7 @@ export function SpendForecast6Mo({
                         x={x + width / 2}
                         y={y - 6}
                         textAnchor="middle"
-                        fill="rgba(255,255,255,0.7)"
+                        fill={chartColors.fgMuted}
                         fontSize={10}
                         style={{ fontVariantNumeric: "tabular-nums" }}
                       >
@@ -250,7 +251,7 @@ export function SpendForecast6Mo({
                     typeof v === "number" ? formatUsdCompact(v) : ""
                   }
                   style={{
-                    fill: "rgba(255,255,255,0.7)",
+                    fill: chartColors.fgMuted,
                     fontSize: 10,
                     fontVariantNumeric: "tabular-nums",
                   }}
@@ -259,34 +260,31 @@ export function SpendForecast6Mo({
             </BarChart>
           </ResponsiveContainer>
           </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center pt-2 text-xs text-white/70">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center pt-2 text-xs text-fg-muted">
             <div className="flex items-center gap-1.5">
               <span
                 className="w-2.5 h-2.5 rounded-sm"
-                style={{ background: "#22d3ee", opacity: 0.55 }}
+                style={{ background: chartColors.pool, opacity: 0.55 }}
               />
               <span>Seat fees (included credits)</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span
                 className="w-2.5 h-2.5 rounded-sm"
-                style={{ background: "#a78bfa", opacity: 0.55 }}
+                style={{ background: chartColors.budget, opacity: 0.55 }}
               />
               <span>Overage budget (planned)</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span
-                className="w-2.5 h-2.5 rounded-sm"
-                style={{
-                  background: "linear-gradient(to bottom, #fb923c, #f43f5e)",
-                }}
+                className="w-2.5 h-2.5 rounded-sm bg-drain-gradient"
               />
               <span>AI overage (spend above seat + budget)</span>
             </div>
           </div>
           </>
         ) : (
-          <div className="h-full flex items-center justify-center text-white/40 text-sm">
+          <div className="h-full flex items-center justify-center text-fg-faint text-sm">
             Not enough data to forecast.
           </div>
         )}

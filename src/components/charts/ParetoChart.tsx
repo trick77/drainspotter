@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
+import { chartColors } from "@/lib/chart-theme";
 import { formatUsd, formatPercent } from "@/lib/format";
 import type { Aggregations } from "@/lib/types";
 
@@ -41,18 +42,18 @@ export function ParetoChart({ aggregations }: Props) {
       <div className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
-            <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="4 4" vertical={false} />
+            <CartesianGrid stroke={chartColors.grid} strokeDasharray="4 4" vertical={false} />
             <XAxis
               dataKey="rank"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
             />
             <YAxis
               yAxisId="left"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
               tickFormatter={(v) => formatUsd(v)}
             />
             <YAxis
@@ -62,7 +63,7 @@ export function ParetoChart({ aggregations }: Props) {
               tickFormatter={(v) => formatPercent(v)}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }}
+              tick={{ fill: chartColors.axis, fontSize: 11 }}
             />
             <Tooltip
               content={
@@ -77,13 +78,13 @@ export function ParetoChart({ aggregations }: Props) {
               yAxisId="right"
               type="monotone"
               dataKey="cumPct"
-              stroke="#22d3ee"
+              stroke={chartColors.pool}
               strokeWidth={2}
               dot={false}
               name="Cumulative %"
               isAnimationActive={false}
             />
-            <ReferenceLine yAxisId="right" y={0.8} stroke="#22d3ee" strokeDasharray="2 4" />
+            <ReferenceLine yAxisId="right" y={0.8} stroke={chartColors.pool} strokeDasharray="2 4" />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
