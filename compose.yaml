@@ -6,7 +6,7 @@ services:
       dockerfile: Containerfile
     restart: unless-stopped
     healthcheck:
-      test: wget -q -O - http://localhost/ >/dev/null || exit 1
+      test: nc -z 127.0.0.1 80 || exit 1
       interval: 30s
       timeout: 5s
       retries: 3
