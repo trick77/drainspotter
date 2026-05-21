@@ -26,6 +26,9 @@ export function ChartDefs() {
           <stop offset="0%" stopColor="#22d3ee" />
           <stop offset="100%" stopColor="#06b6d4" />
         </linearGradient>
+        <filter id="uname-blur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2.5" />
+        </filter>
       </defs>
     </svg>
   );
