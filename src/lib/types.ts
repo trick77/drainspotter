@@ -10,7 +10,6 @@ export type UsageRow = {
   grossAmount: number;
   discountAmount: number;
   netAmount: number;
-  exceedsQuota: boolean;
   totalMonthlyQuota: number;
   organization: string;
   costCenterName: string;
@@ -36,8 +35,7 @@ export type Settings = {
 export type PerUser = {
   username: string;
   totalAic: number;
-  totalRequests: number;
-  exceedsQuota: boolean;
+  totalCredits: number;
   perDay: { date: string; aic: number }[];
   perModel: { model: string; aic: number }[];
 };
@@ -45,8 +43,8 @@ export type PerUser = {
 export type PerModel = {
   model: string;
   totalAic: number;
-  totalRequests: number;
-  costPerRequest: number;
+  totalCredits: number;
+  costPerCredit: number;
 };
 
 export type PerDay = {
@@ -65,7 +63,7 @@ export type UserModelCell = {
 export type Aggregations = {
   rowCount: number;
   totalAic: number;
-  totalRequests: number;
+  totalCredits: number;
   activeUsernames: string[];
   models: string[];
   perUser: PerUser[];

@@ -18,7 +18,7 @@ import { UserLeaderboard } from "@/components/charts/UserLeaderboard";
 import { ParetoChart } from "@/components/charts/ParetoChart";
 import { UserModelHeatmap } from "@/components/charts/UserModelHeatmap";
 import { ModelMixTreemap } from "@/components/charts/ModelMixTreemap";
-import { CostPerRequest } from "@/components/charts/CostPerRequest";
+import { CostPerCredit } from "@/components/charts/CostPerCredit";
 import { DailyBurnRate } from "@/components/charts/DailyBurnRate";
 import { ModelMixTrend } from "@/components/charts/ModelMixTrend";
 import { PoolBurnDown } from "@/components/charts/PoolBurnDown";
@@ -127,7 +127,7 @@ export default function App() {
           <ModelMixTrend aggregations={aggregations} />
         </div>
         <UserModelHeatmap aggregations={aggregations} />
-        <CostPerRequest aggregations={aggregations} />
+        <CostPerCredit aggregations={aggregations} />
         <UserDetailTable aggregations={aggregations} pool={pool} />
       </div>
     );
@@ -219,7 +219,7 @@ export default function App() {
               <li>
                 Download the CSV and drop it above. Only the{" "}
                 <span className="font-mono text-white/70">
-                  premiumRequestUsageReport
+                  AIUsageReport
                 </span>{" "}
                 file is needed.
               </li>

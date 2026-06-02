@@ -7,7 +7,7 @@ import { clsx } from "clsx";
 
 type Props = { aggregations: Aggregations; pool: PoolState };
 
-type SortKey = "username" | "totalAic" | "totalRequests" | "share";
+type SortKey = "username" | "totalAic" | "totalCredits" | "share";
 
 function MiniSpark({ data, color }: { data: number[]; color: string }) {
   if (data.length === 0) return <span className="text-white/30">—</span>;
@@ -105,18 +105,17 @@ export function UserDetailTable({ aggregations, pool }: Props) {
               </th>
               <Th k="username">User</Th>
               <Th k="totalAic">Spent</Th>
-              <Th k="totalRequests">Requests</Th>
+              <Th k="totalCredits">AI Credits</Th>
               <Th k="share">% Pool</Th>
               <th className="text-left px-3 py-2 text-xs uppercase tracking-wider text-white/50">
                 7-Day Trend
               </th>
-              <th className="px-3 py-2 text-xs uppercase tracking-wider text-white/50">Quota</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-3 py-6 text-center text-white/40">
+                <td colSpan={6} className="px-3 py-6 text-center text-white/40">
                   No users match "{query}"
                 </td>
               </tr>
@@ -139,20 +138,13 @@ export function UserDetailTable({ aggregations, pool }: Props) {
                     {formatUsd(u.totalAic)}
                   </td>
                   <td className="px-3 py-2 tabular text-white/70">
-                    {u.totalRequests.toFixed(1)}
+                    {u.totalCredits.toFixed(1)}
                   </td>
                   <td className="px-3 py-2 tabular text-white/70">
                     {(u.share * 100).toFixed(2)}%
                   </td>
                   <td className="px-3 py-2">
                     <MiniSpark data={sparkData} color={over ? "#fb923c" : "#818cf8"} />
-                  </td>
-                  <td className="px-3 py-2 text-center">
-                    {u.exceedsQuota && (
-                      <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-rose-500/20 text-rose-300 animate-pulse">
-                        exceeded
-                      </span>
-                    )}
                   </td>
                 </tr>
               );

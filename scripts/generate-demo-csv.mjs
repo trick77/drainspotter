@@ -2,6 +2,7 @@
 /**
  * generate-demo-csv.mjs
  * Reads scripts/source-real.csv, truncates to 2026-04-15, anonymizes usernames,
+ * converts legacy premium-request rows to the current AI credits schema,
  * sets organization to DemoOrg, and writes public/demo.csv.
  */
 
@@ -115,10 +116,34 @@ const headers = parseCSVLine(headerLine);
 // Find column indices
 const dateIdx = headers.indexOf("date");
 const usernameIdx = headers.indexOf("username");
+const skuIdx = headers.indexOf("sku");
+const quantityIdx = headers.indexOf("quantity");
+const unitTypeIdx = headers.indexOf("unit_type");
+const appliedCostIdx = headers.indexOf("applied_cost_per_quantity");
+const grossIdx = headers.indexOf("gross_amount");
+const discountIdx = headers.indexOf("discount_amount");
+const netIdx = headers.indexOf("net_amount");
+const exceedsQuotaIdx = headers.indexOf("exceeds_quota");
+const totalMonthlyQuotaIdx = headers.indexOf("total_monthly_quota");
 const organizationIdx = headers.indexOf("organization");
 const aicGrossIdx = headers.indexOf("aic_gross_amount");
+const aicQuantityIdx = headers.indexOf("aic_quantity");
 
-if (dateIdx === -1 || usernameIdx === -1 || organizationIdx === -1 || aicGrossIdx === -1) {
+if (
+  dateIdx === -1 ||
+  usernameIdx === -1 ||
+  skuIdx === -1 ||
+  quantityIdx === -1 ||
+  unitTypeIdx === -1 ||
+  appliedCostIdx === -1 ||
+  grossIdx === -1 ||
+  discountIdx === -1 ||
+  netIdx === -1 ||
+  totalMonthlyQuotaIdx === -1 ||
+  organizationIdx === -1 ||
+  aicQuantityIdx === -1 ||
+  aicGrossIdx === -1
+) {
   console.error("Could not find required columns. Headers:", headers);
   process.exit(1);
 }
@@ -226,14 +251,28 @@ function quoteField(val) {
 
 const outLines = [];
 // Header
-outLines.push(headers.map(quoteField).join(","));
+const outHeaders = headers.filter((_, idx) => idx !== exceedsQuotaIdx);
+outLines.push(outHeaders.map(quoteField).join(","));
 
 for (const row of truncatedRows) {
   const newRow = [...row];
   const origUser = row[usernameIdx];
   newRow[usernameIdx] = aliasMap.get(origUser) ?? origUser;
+  newRow[skuIdx] = "copilot_ai_credit";
+  newRow[quantityIdx] = row[aicQuantityIdx];
+  newRow[unitTypeIdx] = "ai-credits";
+  newRow[appliedCostIdx] = "0.01";
+  newRow[grossIdx] = row[aicGrossIdx];
+  newRow[discountIdx] = row[aicGrossIdx];
+  newRow[netIdx] = "0";
+  newRow[totalMonthlyQuotaIdx] = "1900";
   newRow[organizationIdx] = "DemoOrg";
-  outLines.push(newRow.map(quoteField).join(","));
+  outLines.push(
+    newRow
+      .filter((_, idx) => idx !== exceedsQuotaIdx)
+      .map(quoteField)
+      .join(",")
+  );
 }
 
 // ---------------------------------------------------------------------------

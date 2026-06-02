@@ -7,16 +7,15 @@ function row(over: Partial<UsageRow> = {}): UsageRow {
     date: "2026-04-01",
     username: "alice",
     product: "copilot",
-    sku: "copilot_premium_request",
+    sku: "copilot_ai_credit",
     model: "GPT-5.4",
     quantity: 1,
-    unitType: "requests",
-    appliedCostPerQuantity: 0.04,
-    grossAmount: 0.04,
-    discountAmount: 0,
+    unitType: "ai-credits",
+    appliedCostPerQuantity: 0.01,
+    grossAmount: 1,
+    discountAmount: 1,
     netAmount: 0,
-    exceedsQuota: false,
-    totalMonthlyQuota: 300,
+    totalMonthlyQuota: 1900,
     organization: "DemoOrg",
     costCenterName: "",
     aicQuantity: 100,
@@ -56,16 +55,17 @@ describe("aggregate", () => {
     expect(a.perUser.map((u) => u.username)).toEqual(["bob", "alice", "carol"]);
   });
 
-  it("rolls up per-model with cost-per-request", () => {
+  it("rolls up per-model with cost-per-credit", () => {
     const a = aggregate([
-      row({ model: "GPT-5.4", quantity: 10, aicGrossAmount: 5 }),
-      row({ model: "GPT-5.4", quantity: 10, aicGrossAmount: 5 }),
-      row({ model: "GPT-5.3-Codex", quantity: 5, aicGrossAmount: 20 }),
+      row({ model: "GPT-5.4", quantity: 10, aicQuantity: 100, aicGrossAmount: 1 }),
+      row({ model: "GPT-5.4", quantity: 10, aicQuantity: 100, aicGrossAmount: 1 }),
+      row({ model: "GPT-5.3-Codex", quantity: 5, aicQuantity: 2000, aicGrossAmount: 20 }),
     ]);
     expect(a.perModel).toHaveLength(2);
     const codex = a.perModel.find((m) => m.model === "GPT-5.3-Codex")!;
     expect(codex.totalAic).toBeCloseTo(20, 5);
-    expect(codex.costPerRequest).toBeCloseTo(4, 5);
+    expect(codex.costPerCredit).toBeCloseTo(0.01, 5);
+    expect(a.totalCredits).toBeCloseTo(2200, 5);
   });
 
   it("rolls up perDay with byUser and byModel maps", () => {
@@ -115,11 +115,11 @@ describe("aggregate", () => {
     expect(aliceCell.aic).toBeCloseTo(3, 5);
   });
 
-  it("propagates exceedsQuota per user", () => {
+  it("uses aic_quantity for per-user credit totals", () => {
     const a = aggregate([
-      row({ username: "alice", exceedsQuota: false }),
-      row({ username: "alice", exceedsQuota: true }),
+      row({ username: "alice", quantity: 1, aicQuantity: 25 }),
+      row({ username: "alice", quantity: 1, aicQuantity: 75 }),
     ]);
-    expect(a.perUser[0].exceedsQuota).toBe(true);
+    expect(a.perUser[0].totalCredits).toBeCloseTo(100, 5);
   });
 });

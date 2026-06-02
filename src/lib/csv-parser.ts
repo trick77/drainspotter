@@ -20,7 +20,6 @@ const REQUIRED_COLUMNS = [
   "gross_amount",
   "discount_amount",
   "net_amount",
-  "exceeds_quota",
   "total_monthly_quota",
   "organization",
   "cost_center_name",
@@ -38,10 +37,6 @@ function num(v: unknown): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-function bool(v: unknown): boolean {
-  return String(v).toLowerCase() === "true";
-}
-
 export function parseUsageCsv(input: string | File): Promise<ParseResult> {
   return new Promise((resolve, reject) => {
     Papa.parse(input as any, {
@@ -51,6 +46,13 @@ export function parseUsageCsv(input: string | File): Promise<ParseResult> {
       complete: (results: Papa.ParseResult<Record<string, string>>) => {
         try {
           const fields = results.meta.fields ?? [];
+          if (fields.includes("exceeds_quota")) {
+            return reject(
+              new ParseError(
+                "Legacy premium request reports are no longer supported. Use the current GitHub Copilot AI credits report."
+              )
+            );
+          }
           const missing = REQUIRED_COLUMNS.filter((c) => !fields.includes(c));
           if (missing.length > 0) {
             return reject(
@@ -59,25 +61,33 @@ export function parseUsageCsv(input: string | File): Promise<ParseResult> {
               )
             );
           }
-          const rows: UsageRow[] = results.data.map((r) => ({
-            date: String(r.date ?? "").trim(),
-            username: String(r.username ?? "").trim(),
-            product: String(r.product ?? "").trim(),
-            sku: String(r.sku ?? "").trim(),
-            model: String(r.model ?? "").trim(),
-            quantity: num(r.quantity),
-            unitType: String(r.unit_type ?? "").trim(),
-            appliedCostPerQuantity: num(r.applied_cost_per_quantity),
-            grossAmount: num(r.gross_amount),
-            discountAmount: num(r.discount_amount),
-            netAmount: num(r.net_amount),
-            exceedsQuota: bool(r.exceeds_quota),
-            totalMonthlyQuota: num(r.total_monthly_quota),
-            organization: String(r.organization ?? "").trim(),
-            costCenterName: String(r.cost_center_name ?? "").trim(),
-            aicQuantity: num(r.aic_quantity),
-            aicGrossAmount: num(r.aic_gross_amount),
-          }));
+          const rows: UsageRow[] = results.data.map((r) => {
+            const sku = String(r.sku ?? "").trim();
+            const unitType = String(r.unit_type ?? "").trim();
+            if (sku !== "copilot_ai_credit" || unitType !== "ai-credits") {
+              throw new ParseError(
+                "Legacy premium request reports are no longer supported. Use the current GitHub Copilot AI credits report."
+              );
+            }
+            return {
+              date: String(r.date ?? "").trim(),
+              username: String(r.username ?? "").trim(),
+              product: String(r.product ?? "").trim(),
+              sku,
+              model: String(r.model ?? "").trim(),
+              quantity: num(r.quantity),
+              unitType,
+              appliedCostPerQuantity: num(r.applied_cost_per_quantity),
+              grossAmount: num(r.gross_amount),
+              discountAmount: num(r.discount_amount),
+              netAmount: num(r.net_amount),
+              totalMonthlyQuota: num(r.total_monthly_quota),
+              organization: String(r.organization ?? "").trim(),
+              costCenterName: String(r.cost_center_name ?? "").trim(),
+              aicQuantity: num(r.aic_quantity),
+              aicGrossAmount: num(r.aic_gross_amount),
+            };
+          });
           resolve({ rows });
         } catch (err) {
           reject(err);

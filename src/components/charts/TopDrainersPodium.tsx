@@ -7,7 +7,7 @@ type Props = { aggregations: Aggregations };
 
 type Place = {
   rank: 1 | 2 | 3;
-  user: { username: string; totalAic: number; totalRequests: number };
+  user: { username: string; totalAic: number; totalCredits: number };
 };
 
 const PODIUM_STYLE: Record<
