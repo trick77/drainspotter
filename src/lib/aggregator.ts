@@ -25,7 +25,7 @@ export function aggregate(rows: UsageRow[]): Aggregations {
     return {
       rowCount: 0,
       totalAic: 0,
-      totalRequests: 0,
+      totalCredits: 0,
       activeUsernames: [],
       models: [],
       perUser: [],
@@ -57,33 +57,31 @@ export function aggregate(rows: UsageRow[]): Aggregations {
   const perUserMap = new Map<string, PerUser>();
   const perModelMap = new Map<
     string,
-    { totalAic: number; totalRequests: number }
+    { totalAic: number; totalCredits: number }
   >();
   const perDayMap = new Map<string, PerDay>();
   const userModelMap = new Map<string, UserModelCell>();
 
   let totalAic = 0;
-  let totalRequests = 0;
+  let totalCredits = 0;
 
   for (const r of monthRows) {
     totalAic += r.aicGrossAmount;
-    totalRequests += r.quantity;
+    totalCredits += r.aicQuantity;
 
     let u = perUserMap.get(r.username);
     if (!u) {
       u = {
         username: r.username,
         totalAic: 0,
-        totalRequests: 0,
-        exceedsQuota: false,
+        totalCredits: 0,
         perDay: [],
         perModel: [],
       };
       perUserMap.set(r.username, u);
     }
     u.totalAic += r.aicGrossAmount;
-    u.totalRequests += r.quantity;
-    if (r.exceedsQuota) u.exceedsQuota = true;
+    u.totalCredits += r.aicQuantity;
     let uDay = u.perDay.find((d) => d.date === r.date);
     if (!uDay) {
       uDay = { date: r.date, aic: 0 };
@@ -99,11 +97,11 @@ export function aggregate(rows: UsageRow[]): Aggregations {
 
     let mAgg = perModelMap.get(r.model);
     if (!mAgg) {
-      mAgg = { totalAic: 0, totalRequests: 0 };
+      mAgg = { totalAic: 0, totalCredits: 0 };
       perModelMap.set(r.model, mAgg);
     }
     mAgg.totalAic += r.aicGrossAmount;
-    mAgg.totalRequests += r.quantity;
+    mAgg.totalCredits += r.aicQuantity;
 
     let pd = perDayMap.get(r.date);
     if (!pd) {
@@ -138,8 +136,8 @@ export function aggregate(rows: UsageRow[]): Aggregations {
     .map(([model, v]) => ({
       model,
       totalAic: v.totalAic,
-      totalRequests: v.totalRequests,
-      costPerRequest: v.totalRequests > 0 ? v.totalAic / v.totalRequests : 0,
+      totalCredits: v.totalCredits,
+      costPerCredit: v.totalCredits > 0 ? v.totalAic / v.totalCredits : 0,
     }))
     .sort((a, b) => b.totalAic - a.totalAic);
   const perDay = [...perDayMap.values()].sort((a, b) =>
@@ -150,7 +148,7 @@ export function aggregate(rows: UsageRow[]): Aggregations {
   return {
     rowCount: monthRows.length,
     totalAic,
-    totalRequests,
+    totalCredits,
     activeUsernames: perUser.map((u) => u.username),
     models: perModel.map((m) => m.model),
     perUser,

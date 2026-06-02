@@ -6,7 +6,7 @@ function agg(over: Partial<Aggregations> = {}): Aggregations {
   return {
     rowCount: 0,
     totalAic: 0,
-    totalRequests: 0,
+    totalCredits: 0,
     activeUsernames: [],
     models: [],
     perUser: [],

@@ -48,7 +48,7 @@ export function DropZone({ onFile, hero = false }: Props) {
           Drop CSV here or click
         </div>
         <div className="text-sm text-white/50 mt-1">
-          GitHub Copilot premiumRequestUsageReport
+          GitHub Copilot AIUsageReport
         </div>
       </div>
       <input
