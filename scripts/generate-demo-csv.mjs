@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * generate-demo-csv.mjs
- * Reads scripts/source-real.csv, truncates to 2026-04-15, anonymizes usernames,
- * converts legacy premium-request rows to the current AI credits schema,
+ * Reads scripts/source-real.csv, truncates to mid-month, anonymizes usernames,
+ * normalizes GitHub Copilot usage rows to the current AI credits schema,
  * sets organization to DemoOrg, and writes public/demo.csv.
  */
 
@@ -126,6 +126,7 @@ const netIdx = headers.indexOf("net_amount");
 const exceedsQuotaIdx = headers.indexOf("exceeds_quota");
 const totalMonthlyQuotaIdx = headers.indexOf("total_monthly_quota");
 const organizationIdx = headers.indexOf("organization");
+const repositoryIdx = headers.indexOf("repository");
 const aicGrossIdx = headers.indexOf("aic_gross_amount");
 const aicQuantityIdx = headers.indexOf("aic_quantity");
 
@@ -159,12 +160,31 @@ for (let i = 1; i < lines.length; i++) {
 console.log(`Total source rows: ${allRows.length}`);
 
 // ---------------------------------------------------------------------------
-// Truncate to dates <= 2026-04-15
+// Truncate to the 15th day of the latest source month
 // ---------------------------------------------------------------------------
-const CUTOFF = "2026-04-15";
+const latestMonth = [...new Set(allRows.map(row => row[dateIdx].slice(0, 7)))].sort().at(-1);
+const CUTOFF = `${latestMonth}-15`;
 const truncatedRows = allRows.filter(row => row[dateIdx] <= CUTOFF);
 
 console.log(`Rows after truncation (≤ ${CUTOFF}): ${truncatedRows.length}`);
+
+function numericField(row, idx) {
+  if (idx === -1) return 0;
+  const n = parseFloat(row[idx]);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function effectiveAicQuantity(row) {
+  const aicQuantity = numericField(row, aicQuantityIdx);
+  const quantity = numericField(row, quantityIdx);
+  return aicQuantity === 0 && quantity > 0 ? quantity : aicQuantity;
+}
+
+function effectiveAicGross(row) {
+  const aicGross = numericField(row, aicGrossIdx);
+  const gross = numericField(row, grossIdx);
+  return aicGross === 0 && gross > 0 ? gross : aicGross;
+}
 
 // ---------------------------------------------------------------------------
 // Compute aic_gross_amount totals per original username on truncated data
@@ -172,7 +192,7 @@ console.log(`Rows after truncation (≤ ${CUTOFF}): ${truncatedRows.length}`);
 const totals = new Map(); // username -> total aic_gross_amount
 for (const row of truncatedRows) {
   const user = row[usernameIdx];
-  const amount = parseFloat(row[aicGrossIdx]) || 0;
+  const amount = effectiveAicGross(row);
   totals.set(user, (totals.get(user) ?? 0) + amount);
 }
 
@@ -259,14 +279,17 @@ for (const row of truncatedRows) {
   const origUser = row[usernameIdx];
   newRow[usernameIdx] = aliasMap.get(origUser) ?? origUser;
   newRow[skuIdx] = "copilot_ai_credit";
-  newRow[quantityIdx] = row[aicQuantityIdx];
+  newRow[quantityIdx] = String(effectiveAicQuantity(row));
   newRow[unitTypeIdx] = "ai-credits";
   newRow[appliedCostIdx] = "0.01";
-  newRow[grossIdx] = row[aicGrossIdx];
-  newRow[discountIdx] = row[aicGrossIdx];
+  newRow[grossIdx] = String(effectiveAicGross(row));
+  newRow[discountIdx] = String(effectiveAicGross(row));
   newRow[netIdx] = "0";
   newRow[totalMonthlyQuotaIdx] = "1900";
   newRow[organizationIdx] = "DemoOrg";
+  if (repositoryIdx !== -1) newRow[repositoryIdx] = "";
+  newRow[aicQuantityIdx] = String(effectiveAicQuantity(row));
+  newRow[aicGrossIdx] = String(effectiveAicGross(row));
   outLines.push(
     newRow
       .filter((_, idx) => idx !== exceedsQuotaIdx)

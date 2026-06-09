@@ -37,6 +37,10 @@ function num(v: unknown): number {
   return Number.isFinite(n) ? n : 0;
 }
 
+function preferAicValue(aicValue: number, fallbackValue: number): number {
+  return aicValue === 0 && fallbackValue > 0 ? fallbackValue : aicValue;
+}
+
 export function parseUsageCsv(input: string | File): Promise<ParseResult> {
   return new Promise((resolve, reject) => {
     Papa.parse(input as any, {
@@ -69,23 +73,30 @@ export function parseUsageCsv(input: string | File): Promise<ParseResult> {
                 "Legacy premium request reports are no longer supported. Use the current GitHub Copilot AI credits report."
               );
             }
+            const quantity = num(r.quantity);
+            const grossAmount = num(r.gross_amount);
+            const aicQuantity = preferAicValue(num(r.aic_quantity), quantity);
+            const aicGrossAmount = preferAicValue(
+              num(r.aic_gross_amount),
+              grossAmount
+            );
             return {
               date: String(r.date ?? "").trim(),
               username: String(r.username ?? "").trim(),
               product: String(r.product ?? "").trim(),
               sku,
               model: String(r.model ?? "").trim(),
-              quantity: num(r.quantity),
+              quantity,
               unitType,
               appliedCostPerQuantity: num(r.applied_cost_per_quantity),
-              grossAmount: num(r.gross_amount),
+              grossAmount,
               discountAmount: num(r.discount_amount),
               netAmount: num(r.net_amount),
               totalMonthlyQuota: num(r.total_monthly_quota),
               organization: String(r.organization ?? "").trim(),
               costCenterName: String(r.cost_center_name ?? "").trim(),
-              aicQuantity: num(r.aic_quantity),
-              aicGrossAmount: num(r.aic_gross_amount),
+              aicQuantity,
+              aicGrossAmount,
             };
           });
           resolve({ rows });

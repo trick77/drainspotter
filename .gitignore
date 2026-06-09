@@ -10,6 +10,7 @@ coverage/
 .superpowers/
 .playwright-mcp/
 scripts/source-real.csv
+scripts/AIUsageReport_*.csv
 *.tsbuildinfo
 vite.config.js
 vite.config.d.ts
