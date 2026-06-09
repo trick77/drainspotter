@@ -87,6 +87,58 @@ describe("forecast", () => {
     expect(f.forecastEoM).toBeCloseTo(440 + 20 * 20, 5);
   });
 
+  it("rolling7: projects weekdays and weekends with separate rates", () => {
+    const f = forecast(
+      agg({
+        totalAic: 500,
+        daysInMonth: 14,
+        daysElapsed: 7,
+        monthStart: "2026-06-01",
+        monthEnd: "2026-06-14",
+        lastDayInData: "2026-06-07",
+        perDay: [
+          { date: "2026-06-01", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-02", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-03", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-04", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-05", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-06", totalAic: 0, byUser: {}, byModel: {} },
+          { date: "2026-06-07", totalAic: 0, byUser: {}, byModel: {} },
+        ],
+      }),
+      "rolling7",
+      1000
+    );
+    expect(f.dailyProjection.find((d) => d.date === "2026-06-12")?.projected).toBeCloseTo(1000, 5);
+    expect(f.dailyProjection.find((d) => d.date === "2026-06-13")?.projected).toBeCloseTo(1000, 5);
+    expect(f.dailyProjection.find((d) => d.date === "2026-06-14")?.projected).toBeCloseTo(1000, 5);
+    expect(f.forecastEoM).toBeCloseTo(1000, 5);
+  });
+
+  it("rolling7: treats missing weekend rows in the window as zero spend", () => {
+    const f = forecast(
+      agg({
+        totalAic: 500,
+        daysInMonth: 14,
+        daysElapsed: 7,
+        monthStart: "2026-06-01",
+        monthEnd: "2026-06-14",
+        lastDayInData: "2026-06-07",
+        perDay: [
+          { date: "2026-06-01", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-02", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-03", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-04", totalAic: 100, byUser: {}, byModel: {} },
+          { date: "2026-06-05", totalAic: 100, byUser: {}, byModel: {} },
+        ],
+      }),
+      "rolling7",
+      1000
+    );
+    expect(f.dailyProjection.find((d) => d.date === "2026-06-13")?.projected).toBeCloseTo(1000, 5);
+    expect(f.forecastEoM).toBeCloseTo(1000, 5);
+  });
+
   it("returns pierceDate when forecast crosses pool", () => {
     const f = forecast(
       agg({

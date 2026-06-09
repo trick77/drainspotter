@@ -262,21 +262,21 @@ export function SpendForecast6Mo({
           <div className="flex flex-wrap gap-x-4 gap-y-1 justify-center pt-2 text-xs text-white/70">
             <div className="flex items-center gap-1.5">
               <span
-                className="w-2.5 h-2.5 rounded-sm"
+                className="inline-block w-2.5 h-2.5 rounded-sm"
                 style={{ background: "#22d3ee", opacity: 0.55 }}
               />
               <span>Seat fees (included credits)</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span
-                className="w-2.5 h-2.5 rounded-sm"
+                className="inline-block w-2.5 h-2.5 rounded-sm"
                 style={{ background: "#a78bfa", opacity: 0.55 }}
               />
               <span>Overage budget (planned)</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span
-                className="w-2.5 h-2.5 rounded-sm"
+                className="inline-block w-2.5 h-2.5 rounded-sm"
                 style={{
                   background: "linear-gradient(to bottom, #fb923c, #f43f5e)",
                 }}

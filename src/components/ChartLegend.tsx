@@ -8,7 +8,7 @@ export function ChartLegend({ payload = [], valueClassName }: Props) {
       {payload.map((p, i) => (
         <div key={i} className="flex items-center gap-1.5">
           <span
-            className="w-2.5 h-2.5 rounded-sm"
+            className="inline-block w-2.5 h-2.5 rounded-sm"
             style={{ background: p.color }}
           />
           <span className={p.value === "other" ? undefined : valueClassName}>

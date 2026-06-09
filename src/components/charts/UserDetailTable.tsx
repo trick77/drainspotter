@@ -39,8 +39,9 @@ export function UserDetailTable({ aggregations, pool }: Props) {
   useEffect(() => {
     if (scrollerRef.current) scrollerRef.current.scrollTop = 0;
   }, [query]);
-  const allRows = [...aggregations.perUser].map((u) => ({
+  const allRows = aggregations.perUser.map((u, i) => ({
     ...u,
+    rank: i + 1,
     share: pool.totalPool > 0 ? u.totalAic / pool.totalPool : 0,
   }));
   const trimmedQuery = query.trim().toLowerCase();
@@ -120,12 +121,12 @@ export function UserDetailTable({ aggregations, pool }: Props) {
                 </td>
               </tr>
             )}
-            {rows.map((u, i) => {
+            {rows.map((u) => {
               const sparkData = u.perDay.slice(-7).map((d) => d.aic);
               const over = u.totalAic > pool.fairSharePerSeat;
               return (
                 <tr key={u.username} className="border-t border-white/5 hover:bg-white/5">
-                  <td className="px-3 py-2 tabular text-white/50">{i + 1}</td>
+                  <td className="px-3 py-2 tabular text-white/50">{u.rank}</td>
                   <td className="px-3 py-2 tabular">
                     <span className="uname">{u.username}</span>
                   </td>

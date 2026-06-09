@@ -13,6 +13,17 @@ function iterDates(start: string, days: number): string[] {
   return out;
 }
 
+function isWeekend(iso: string): boolean {
+  const [y, m, d] = iso.split("-").map(Number);
+  const day = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return day === 0 || day === 6;
+}
+
+function average(values: number[]): number | null {
+  if (values.length === 0) return null;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
 export function forecast(
   a: Aggregations,
   mode: ForecastMode,
@@ -29,6 +40,12 @@ export function forecast(
     };
   }
 
+  const allDates = iterDates(a.monthStart, a.daysInMonth);
+  const actualByDate = new Map(a.perDay.map((d) => [d.date, d.totalAic]));
+  const elapsedDates = allDates.filter((date) => date <= a.lastDayInData);
+  const observedWindow =
+    mode === "linear" ? elapsedDates : elapsedDates.slice(-7);
+
   let dailyAvg: number;
   if (mode === "linear") {
     dailyAvg = a.totalAic / a.daysElapsed;
@@ -38,14 +55,34 @@ export function forecast(
     dailyAvg = lastN.length > 0 ? sum / lastN.length : 0;
   }
 
-  const allDates = iterDates(a.monthStart, a.daysInMonth);
-  const actualByDate = new Map(a.perDay.map((d) => [d.date, d.totalAic]));
+  const hasDailySeries = a.perDay.length > 0;
+  const fallbackDailyAvg = hasDailySeries
+    ? average(observedWindow.map((date) => actualByDate.get(date) ?? 0)) ?? dailyAvg
+    : dailyAvg;
+  const weekdayAvg = hasDailySeries
+    ? average(
+        observedWindow
+          .filter((date) => !isWeekend(date))
+          .map((date) => actualByDate.get(date) ?? 0)
+      )
+    : dailyAvg;
+  const weekendAvg = hasDailySeries
+    ? average(
+        observedWindow
+          .filter((date) => isWeekend(date))
+          .map((date) => actualByDate.get(date) ?? 0)
+      )
+    : dailyAvg;
+
   let cum = 0;
   const dailyProjection = allDates.map((date) => {
     if (date <= a.lastDayInData) {
-      cum += actualByDate.get(date) ?? dailyAvg;
+      cum += actualByDate.get(date) ?? (hasDailySeries ? 0 : dailyAvg);
     } else {
-      cum += dailyAvg;
+      const projectedDaily = isWeekend(date)
+        ? weekendAvg ?? fallbackDailyAvg
+        : weekdayAvg ?? fallbackDailyAvg;
+      cum += projectedDaily;
     }
     return { date, projected: cum };
   });
