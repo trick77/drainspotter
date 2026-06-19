@@ -5,8 +5,10 @@
 A browser-only dashboard for the GitHub Copilot `AIUsageReport_*.csv`.
 
 GitHub Copilot is moving to usage-based billing on June 1, 2026. Each Business
-seat ($19/month) brings $19 of AI Credits. The credits aren't reserved per
-seat — they flow into a shared org pool and any active user can drain it.
+seat ($19/month) brings $19 of AI Credits — Enterprise seats ($39/month) bring
+$39. During the Jun–Aug 2026 promo, GitHub gifts bonus credits on top (Business
+$30, Enterprise $70 per seat). The credits aren't reserved per seat — they flow
+into a shared org pool and any active user can drain it.
 
 drainspotter takes the CSV, slaps a slider on top for "how many seats did we
 actually buy", and answers the questions you actually have:

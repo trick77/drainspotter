@@ -21,9 +21,13 @@ export type ForecastMode = "linear" | "rolling7";
 
 export type ForecastGrowth = "conservative" | "moderate" | "aggressive";
 
+export type SubscriptionTier = "business" | "enterprise";
+
 export type Settings = {
   purchasedSlots: number;
-  costPerSeat: number;
+  tier: SubscriptionTier;
+  seatPrice: number;       // USD paid per seat (= base included credits)
+  promoBonus: number;      // bonus credits per seat during promo months (gifted)
   overageBudget: number;
   forecastMode: ForecastMode;
   burnRateGroupBy: "user" | "model";
@@ -80,13 +84,14 @@ export type Aggregations = {
 
 export type PoolState = {
   purchasedSlots: number;
-  costPerSeat: number;
+  seatPrice: number;              // USD paid per seat (idle-waste basis)
+  includedCreditsPerSeat: number; // credits per seat for current month (promo-aware)
   overageBudget: number;
-  totalPool: number;              // purchasedSlots * costPerSeat + overageBudget
+  totalPool: number;              // purchasedSlots * includedCreditsPerSeat + overageBudget
   spent: number;
   remaining: number;
   percentUsed: number;            // 0..1
-  fairSharePerSeat: number;
+  fairSharePerSeat: number;       // = includedCreditsPerSeat
   activeSeats: number;
   idleSeats: number;              // max(0, purchasedSlots - activeSeats)
 };

@@ -69,7 +69,7 @@ export function KpiTiles({ aggregations, pool, forecast }: Props) {
   const spark = aggregations.perDay.map((d) => ({ date: d.date, v: d.totalAic }));
   const overshoot = forecast.forecastVsPool > 0;
   const showIdle = pool.purchasedSlots > pool.activeSeats;
-  const wasted = pool.idleSeats * pool.costPerSeat;
+  const wasted = pool.idleSeats * pool.seatPrice;
   const colClass = showIdle
     ? "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 col-span-full"
     : "grid grid-cols-2 md:grid-cols-5 gap-3 col-span-full";
@@ -86,8 +86,8 @@ export function KpiTiles({ aggregations, pool, forecast }: Props) {
         value={formatUsd(pool.totalPool)}
         delta={
           pool.overageBudget > 0
-            ? `${pool.purchasedSlots} × $${pool.costPerSeat} + $${pool.overageBudget} budget`
-            : `${pool.purchasedSlots} slots × $${pool.costPerSeat}`
+            ? `${pool.purchasedSlots} × $${pool.includedCreditsPerSeat} + $${pool.overageBudget} budget`
+            : `${pool.purchasedSlots} slots × $${pool.includedCreditsPerSeat}`
         }
       />
       <Tile
