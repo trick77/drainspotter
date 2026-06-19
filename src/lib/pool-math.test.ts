@@ -2,10 +2,11 @@ import { describe, it, expect } from "vitest";
 import { computePool } from "./pool-math";
 
 describe("computePool", () => {
-  it("calculates pool size from slots × costPerSeat", () => {
+  it("calculates pool size from slots × includedCreditsPerSeat", () => {
     const p = computePool({
       purchasedSlots: 100,
-      costPerSeat: 19,
+      seatPrice: 19,
+      includedCreditsPerSeat: 19,
       spent: 0,
       activeUsernames: [],
     });
@@ -15,10 +16,38 @@ describe("computePool", () => {
     expect(p.percentUsed).toBe(0);
   });
 
+  it("uses promo credits (not the seat price) for the pool when they diverge", () => {
+    // Business promo month: price stays $19, credits rise to $30.
+    const p = computePool({
+      purchasedSlots: 100,
+      seatPrice: 19,
+      includedCreditsPerSeat: 30,
+      spent: 0,
+      activeUsernames: [],
+    });
+    expect(p.totalPool).toBe(3000); // not 1900 ($19) and not 4900 ($49)
+    expect(p.fairSharePerSeat).toBe(30);
+    expect(p.seatPrice).toBe(19); // price preserved for idle-waste
+  });
+
+  it("adds the overage budget on top of seat credits", () => {
+    const p = computePool({
+      purchasedSlots: 10,
+      seatPrice: 19,
+      includedCreditsPerSeat: 19,
+      overageBudget: 500,
+      spent: 0,
+      activeUsernames: [],
+    });
+    expect(p.totalPool).toBe(190 + 500);
+    expect(p.overageBudget).toBe(500);
+  });
+
   it("computes spent, remaining, percentUsed", () => {
     const p = computePool({
       purchasedSlots: 10,
-      costPerSeat: 19,
+      seatPrice: 19,
+      includedCreditsPerSeat: 19,
       spent: 127,
       activeUsernames: [],
     });
@@ -30,7 +59,8 @@ describe("computePool", () => {
   it("computes idleSeats from purchased minus active", () => {
     const p = computePool({
       purchasedSlots: 10,
-      costPerSeat: 19,
+      seatPrice: 19,
+      includedCreditsPerSeat: 19,
       spent: 0,
       activeUsernames: ["a", "b", "c"],
     });
@@ -41,7 +71,8 @@ describe("computePool", () => {
   it("clamps idleSeats to 0 when active > purchased", () => {
     const p = computePool({
       purchasedSlots: 2,
-      costPerSeat: 19,
+      seatPrice: 19,
+      includedCreditsPerSeat: 19,
       spent: 0,
       activeUsernames: ["a", "b", "c"],
     });
@@ -51,7 +82,8 @@ describe("computePool", () => {
   it("handles zero slots gracefully (no NaN)", () => {
     const p = computePool({
       purchasedSlots: 0,
-      costPerSeat: 19,
+      seatPrice: 19,
+      includedCreditsPerSeat: 19,
       spent: 50,
       activeUsernames: [],
     });

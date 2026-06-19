@@ -3,7 +3,7 @@
 ## Data semantics
 
 - `aic_gross_amount` is the canonical USD figure (post-2026-06-01 AI Credits world). Use it. **Ignore** `gross_amount` / `net_amount` (legacy PRU pricing) — they exist in the CSV but are not the source of truth.
-- Pool = `purchasedSlots × costPerSeat`. Default `costPerSeat` is `$19` (Business seat). During the Jun–Aug 2026 promo it's `$49` — user toggles manually.
+- Pool = `purchasedSlots × includedCreditsPerSeat + overageBudget`. A seat brings its **price** in credits (Business $19 / Enterprise $39). The Jun–Aug 2026 promo is a **bonus on top** (Business +$11 → $30, Enterprise +$31 → $70), applied automatically by month via `src/lib/pricing.ts`. The seat *price* never changes; only the included *credits* rise — keep price (idle-waste) and credits (pool/fair-share) separate. `overageBudget` is a deliberate extra planned budget added on top; don't fold it into seat math.
 - Forecast uses 7-day rolling average and computes `pierceDate` (the day cumulative spend crosses the pool). Don't switch the default forecast method without asking.
 
 ## Privacy / PII
@@ -33,7 +33,7 @@
 
 ## Settings persistence
 
-- LocalStorage key: `drainspotter:settings:v1`. **Bump the `:v1` suffix if you change the Settings shape** — old keys are read with default-fallback, but renames will silently merge wrong.
+- LocalStorage key: `drainspotter:settings:v1`. **Bump the `:v1` suffix if you change the Settings shape** — old keys are read with default-fallback, but renames will silently merge wrong. Exception: a rename may instead be handled by the `migrate()` step in `loadSettings` (e.g. legacy `costPerSeat` → `seatPrice`), which preserves the user's other settings.
 - CSV row data is **never** persisted (privacy + volume). Settings only.
 
 ## Print / PDF export

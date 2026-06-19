@@ -4,7 +4,8 @@ import { aggregate } from "@/lib/aggregator";
 import { computePool } from "@/lib/pool-math";
 import { forecast } from "@/lib/forecaster";
 import { loadSettings, saveSettings } from "@/lib/settings-store";
-import type { UsageRow, Settings } from "@/lib/types";
+import { TIER_DEFAULTS, includedCreditsForMonth } from "@/lib/pricing";
+import type { UsageRow, Settings, SubscriptionTier } from "@/lib/types";
 import { DropZone } from "@/components/DropZone";
 import { DemoDataButton } from "@/components/DemoDataButton";
 import { PoolControls } from "@/components/PoolControls";
@@ -52,13 +53,24 @@ export default function App() {
       aggregations
         ? computePool({
             purchasedSlots: settings.purchasedSlots,
-            costPerSeat: settings.costPerSeat,
+            seatPrice: settings.seatPrice,
+            includedCreditsPerSeat: includedCreditsForMonth(
+              settings.seatPrice,
+              settings.promoBonus,
+              new Date(aggregations.monthStart + "T00:00:00Z")
+            ),
             overageBudget: settings.overageBudget,
             spent: aggregations.totalAic,
             activeUsernames: aggregations.activeUsernames,
           })
         : null,
-    [aggregations, settings.purchasedSlots, settings.costPerSeat, settings.overageBudget]
+    [
+      aggregations,
+      settings.purchasedSlots,
+      settings.seatPrice,
+      settings.promoBonus,
+      settings.overageBudget,
+    ]
   );
   const fc = useMemo(
     () =>
@@ -72,8 +84,22 @@ export default function App() {
     (v: number) => setSettings((s) => ({ ...s, purchasedSlots: v })),
     []
   );
-  const onCostChange = useCallback(
-    (v: number) => setSettings((s) => ({ ...s, costPerSeat: v })),
+  const onTierChange = useCallback(
+    (tier: SubscriptionTier) =>
+      setSettings((s) => ({
+        ...s,
+        tier,
+        seatPrice: TIER_DEFAULTS[tier].seatPrice,
+        promoBonus: TIER_DEFAULTS[tier].promoBonus,
+      })),
+    []
+  );
+  const onSeatPriceChange = useCallback(
+    (v: number) => setSettings((s) => ({ ...s, seatPrice: v })),
+    []
+  );
+  const onPromoBonusChange = useCallback(
+    (v: number) => setSettings((s) => ({ ...s, promoBonus: v })),
     []
   );
   const onOverageChange = useCallback(
@@ -111,6 +137,8 @@ export default function App() {
             aggregations={aggregations}
             forecast={fc}
             pool={pool}
+            seatPrice={settings.seatPrice}
+            promoBonus={settings.promoBonus}
             growth={settings.forecastGrowth}
             onGrowthChange={onGrowthChange}
           />
@@ -133,6 +161,8 @@ export default function App() {
     aggregations,
     pool,
     fc,
+    settings.seatPrice,
+    settings.promoBonus,
     settings.forecastGrowth,
     settings.burnRateGroupBy,
     onGrowthChange,
@@ -287,10 +317,15 @@ export default function App() {
           <div className="grid grid-cols-1 gap-4 mb-6">
             <PoolControls
               slots={settings.purchasedSlots}
-              costPerSeat={settings.costPerSeat}
+              tier={settings.tier}
+              seatPrice={settings.seatPrice}
+              promoBonus={settings.promoBonus}
+              monthStart={aggregations.monthStart}
               overageBudget={settings.overageBudget}
               onSlotsChange={onSlotsChange}
-              onCostChange={onCostChange}
+              onTierChange={onTierChange}
+              onSeatPriceChange={onSeatPriceChange}
+              onPromoBonusChange={onPromoBonusChange}
               onOverageChange={onOverageChange}
             />
           </div>

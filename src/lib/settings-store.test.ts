@@ -37,7 +37,9 @@ describe("settings-store", () => {
     const s = {
       ...DEFAULT_SETTINGS,
       purchasedSlots: 42,
-      costPerSeat: 49,
+      tier: "enterprise" as const,
+      seatPrice: 39,
+      promoBonus: 31,
       forecastMode: "rolling7" as const,
     };
     saveSettings(s);
@@ -51,7 +53,18 @@ describe("settings-store", () => {
     );
     const loaded = loadSettings();
     expect(loaded.purchasedSlots).toBe(7);
-    expect(loaded.costPerSeat).toBe(DEFAULT_SETTINGS.costPerSeat);
+    expect(loaded.seatPrice).toBe(DEFAULT_SETTINGS.seatPrice);
+  });
+
+  it("migrates legacy costPerSeat onto seatPrice", () => {
+    localStorage.setItem(
+      "drainspotter:settings:v1",
+      JSON.stringify({ purchasedSlots: 50, costPerSeat: 39 })
+    );
+    const loaded = loadSettings();
+    expect(loaded.seatPrice).toBe(39);
+    expect(loaded.promoBonus).toBe(DEFAULT_SETTINGS.promoBonus);
+    expect("costPerSeat" in loaded).toBe(false);
   });
 
   it("falls back to defaults on corrupt JSON", () => {

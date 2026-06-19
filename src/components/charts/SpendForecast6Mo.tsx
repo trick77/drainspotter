@@ -12,6 +12,7 @@ import { clsx } from "clsx";
 import { ChartFrame } from "@/components/ChartFrame";
 import { ChartTooltip } from "@/components/ChartTooltip";
 import { formatUsd, formatUsdCompact } from "@/lib/format";
+import { isPromoMonth, includedCreditsForMonth } from "@/lib/pricing";
 import type {
   Aggregations,
   Forecast,
@@ -23,6 +24,8 @@ type Props = {
   aggregations: Aggregations;
   forecast: Forecast;
   pool: PoolState;
+  seatPrice: number;
+  promoBonus: number;
   growth: ForecastGrowth;
   onGrowthChange: (g: ForecastGrowth) => void;
 };
@@ -36,16 +39,6 @@ const GROWTH: Record<
   aggressive: { label: "Aggressive", rate: 0.2, description: "+20 %/mo compounded" },
 };
 
-const PROMO_COST_PER_SEAT = 49;
-const REGULAR_COST_PER_SEAT = 19;
-
-// GitHub Copilot Business promo: Jun–Aug 2026, seats include $49 of credits instead of $19.
-function isPromoMonth(d: Date): boolean {
-  const y = d.getUTCFullYear();
-  const m = d.getUTCMonth();
-  return y === 2026 && m >= 5 && m <= 7;
-}
-
 function shortMonthLabel(d: Date): string {
   const m = d.toLocaleDateString("en-US", { month: "short", timeZone: "UTC" });
   const y = String(d.getUTCFullYear()).slice(2);
@@ -56,6 +49,8 @@ export function SpendForecast6Mo({
   aggregations,
   forecast,
   pool,
+  seatPrice,
+  promoBonus,
   growth,
   onGrowthChange,
 }: Props) {
@@ -64,20 +59,14 @@ export function SpendForecast6Mo({
   const validAnchor = Number.isFinite(anchor) && anchor > 0;
 
   const start = new Date(aggregations.monthStart + "T00:00:00Z");
-  const userCost = pool.costPerSeat;
 
   const data = Array.from({ length: 7 }, (_, n) => {
     const d = new Date(start);
     d.setUTCMonth(d.getUTCMonth() + n);
     const promo = isPromoMonth(d);
-    // If the user has set a non-promo cost, auto-bump promo months to $49.
-    // If they've set the promo cost ($49), auto-revert non-promo months to $19.
-    const seatCost = promo
-      ? Math.max(userCost, PROMO_COST_PER_SEAT)
-      : userCost === PROMO_COST_PER_SEAT
-      ? REGULAR_COST_PER_SEAT
-      : userCost;
-    const seatFees = pool.purchasedSlots * seatCost;
+    // Included credits per seat for this month: base price, plus the promo bonus
+    // during promo months (Business +$11 → $30, Enterprise +$31 → $70).
+    const seatFees = pool.purchasedSlots * includedCreditsForMonth(seatPrice, promoBonus, d);
     const budget = pool.overageBudget;
     const spend = validAnchor ? anchor * Math.pow(1 + rate, n) : 0;
     const overage = Math.max(0, spend - seatFees - budget);
@@ -277,9 +266,7 @@ export function SpendForecast6Mo({
             <div className="flex items-center gap-1.5">
               <span
                 className="inline-block w-2.5 h-2.5 rounded-sm"
-                style={{
-                  background: "linear-gradient(to bottom, #fb923c, #f43f5e)",
-                }}
+                style={{ background: "#fb923c" }}
               />
               <span>AI overage (spend above seat + budget)</span>
             </div>
