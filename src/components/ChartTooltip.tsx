@@ -41,7 +41,12 @@ export function ChartTooltip({
           <div key={i} className="flex items-center gap-2">
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ background: p.color }}
+              // A gradient fill (e.g. `url(#drainBar)`) can't render as an HTML
+              // background — fall back to the drain orange so the dot still shows.
+              style={{
+                background:
+                  p.color && !p.color.startsWith("url(") ? p.color : "#fb923c",
+              }}
             />
             <span className={`text-white/80 flex-1 truncate${nameClassName ? ` ${nameClassName}` : ""}`}>
               {p.name}
