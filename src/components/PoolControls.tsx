@@ -1,5 +1,5 @@
 import { formatUsd } from "@/lib/format";
-import { TIER_LABELS, includedCreditsForMonth } from "@/lib/pricing";
+import { TIER_LABELS } from "@/lib/pricing";
 import type { SubscriptionTier } from "@/lib/types";
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
   tier: SubscriptionTier;
   seatPrice: number;
   promoBonus: number;
-  monthStart: string;
+  includedCreditsPerSeat: number;
   overageBudget: number;
   onSlotsChange: (v: number) => void;
   onTierChange: (v: SubscriptionTier) => void;
@@ -21,7 +21,7 @@ export function PoolControls({
   tier,
   seatPrice,
   promoBonus,
-  monthStart,
+  includedCreditsPerSeat,
   overageBudget,
   onSlotsChange,
   onTierChange,
@@ -29,11 +29,7 @@ export function PoolControls({
   onPromoBonusChange,
   onOverageChange,
 }: Props) {
-  const credits = includedCreditsForMonth(
-    seatPrice,
-    promoBonus,
-    new Date(monthStart + "T00:00:00Z")
-  );
+  const credits = includedCreditsPerSeat;
   const promoActive = credits !== seatPrice;
   const pool = slots * credits + Math.max(0, overageBudget || 0);
   return (

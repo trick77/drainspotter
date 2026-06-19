@@ -56,15 +56,39 @@ describe("settings-store", () => {
     expect(loaded.seatPrice).toBe(DEFAULT_SETTINGS.seatPrice);
   });
 
-  it("migrates legacy costPerSeat onto seatPrice", () => {
+  it("migrates legacy costPerSeat onto seatPrice and infers the tier", () => {
     localStorage.setItem(
       "drainspotter:settings:v1",
       JSON.stringify({ purchasedSlots: 50, costPerSeat: 39 })
     );
     const loaded = loadSettings();
     expect(loaded.seatPrice).toBe(39);
-    expect(loaded.promoBonus).toBe(DEFAULT_SETTINGS.promoBonus);
+    // $39 matches the Enterprise seat price → infer Enterprise + its +$31 bonus.
+    expect(loaded.tier).toBe("enterprise");
+    expect(loaded.promoBonus).toBe(31);
     expect("costPerSeat" in loaded).toBe(false);
+  });
+
+  it("infers Business tier from a legacy $19 costPerSeat", () => {
+    localStorage.setItem(
+      "drainspotter:settings:v1",
+      JSON.stringify({ costPerSeat: 19 })
+    );
+    const loaded = loadSettings();
+    expect(loaded.tier).toBe("business");
+    expect(loaded.seatPrice).toBe(19);
+    expect(loaded.promoBonus).toBe(11);
+  });
+
+  it("keeps default tier/bonus for an unrecognized legacy costPerSeat", () => {
+    localStorage.setItem(
+      "drainspotter:settings:v1",
+      JSON.stringify({ costPerSeat: 49 })
+    );
+    const loaded = loadSettings();
+    expect(loaded.seatPrice).toBe(49);
+    expect(loaded.tier).toBe(DEFAULT_SETTINGS.tier);
+    expect(loaded.promoBonus).toBe(DEFAULT_SETTINGS.promoBonus);
   });
 
   it("falls back to defaults on corrupt JSON", () => {

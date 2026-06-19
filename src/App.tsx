@@ -320,7 +320,7 @@ export default function App() {
               tier={settings.tier}
               seatPrice={settings.seatPrice}
               promoBonus={settings.promoBonus}
-              monthStart={aggregations.monthStart}
+              includedCreditsPerSeat={pool.includedCreditsPerSeat}
               overageBudget={settings.overageBudget}
               onSlotsChange={onSlotsChange}
               onTierChange={onTierChange}
