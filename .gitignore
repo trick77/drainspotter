@@ -17,5 +17,4 @@ vite.config.d.ts
 vitest.config.js
 vitest.config.d.ts
 
-# Local git worktrees
-.agents/worktrees/
+.agents/
