@@ -1,6 +1,8 @@
 version: 2
 updates:
   - package-ecosystem: npm
+    cooldown:
+      default-days: 7
     directory: /
     schedule:
       interval: weekly
@@ -22,6 +24,8 @@ updates:
         patterns: ["*"]
         update-types: ["major"]
   - package-ecosystem: github-actions
+    cooldown:
+      default-days: 7
     directory: /
     schedule:
       interval: weekly
@@ -29,6 +33,8 @@ updates:
       actions:
         patterns: ["*"]
   - package-ecosystem: docker
+    cooldown:
+      default-days: 7
     directory: /
     schedule:
       interval: weekly
